@@ -1,0 +1,123 @@
+efjkmnt@CN00052386 MINGW64 ~/git
+$ git clone https://github.com/lzsbtot/ShowMetheCode.git
+Cloning into 'ShowMetheCode'...
+warning: You appear to have cloned an empty repository.
+
+efjkmnt@CN00052386 MINGW64 ~/git
+$ ll
+total 0
+drwxr-xr-x 1 efjkmnt 1049089 0 Apr 24 16:37 _git-aliecs_/
+drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 ShowMetheCode/
+
+efjkmnt@CN00052386 MINGW64 ~/git
+$ cd ShowMetheCode/
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ ls -al
+total 4
+drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 ./
+drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 ../
+drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 .git/
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ cd .git/
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/.git (GIT_DIR!)
+$ ls -al
+total 11
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 ./
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 ../
+-rw-r--r-- 1 efjkmnt 1049089 307 Apr 25 15:26 config
+-rw-r--r-- 1 efjkmnt 1049089  73 Apr 25 15:26 description
+-rw-r--r-- 1 efjkmnt 1049089  23 Apr 25 15:26 HEAD
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 hooks/
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 info/
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 objects/
+drwxr-xr-x 1 efjkmnt 1049089   0 Apr 25 15:26 refs/
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/.git (GIT_DIR!)
+$ cat config
+[core]
+        repositoryformatversion = 0
+        filemode = false
+        bare = false
+        logallrefupdates = true
+        symlinks = false
+        ignorecase = true
+[remote "origin"]
+        url = https://github.com/lzsbtot/ShowMetheCode.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/.git (GIT_DIR!)
+$ cd ..
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ touch readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ ll
+total 0
+-rw-r--r-- 1 efjkmnt 1049089 0 Apr 25 15:27 readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ vim readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ ll
+total 1
+-rw-r--r-- 1 efjkmnt 1049089 59 Apr 25 15:27 readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        readme
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ git add readme readme
+warning: LF will be replaced by CRLF in readme.
+The file will have its original line endings in your working directory.
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ ll
+total 1
+-rw-r--r-- 1 efjkmnt 1049089 59 Apr 25 15:27 readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+        new file:   readme
+
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ git commit -m "add readme file"
+[master (root-commit) 6d1ac79] add readme file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 readme
+
+efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode (master)
+$ git push origin master
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 257 bytes | 257.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/lzsbtot/ShowMetheCode.git
+ * [new branch]      master -> master
+
