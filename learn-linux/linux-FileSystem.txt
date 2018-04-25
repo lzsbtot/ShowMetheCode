@@ -1,0 +1,103 @@
+root@AliECS:/# ls -alt
+total 104
+dr-xr-xr-x  13 root root     0 Apr 25 16:15 sys
+drwxrwxrwt  10 root root  4096 Apr 25 16:15 tmp
+drwx------  22 root root  4096 Apr 25 13:42 root
+drwxr-xr-x  27 root root   940 Apr 25 13:40 run
+drwxr-xr-x 149 root root 12288 Apr 24 16:27 etc
+drwxr-xr-x   3 root root  4096 Apr 24 16:23 home
+drwxr-xr-x  23 root root  4096 Apr 23 18:07 .
+drwxr-xr-x  23 root root  4096 Apr 23 18:07 ..
+drwxr-xr-x  20 root root  3880 Apr 23 18:07 dev
+dr-xr-xr-x 147 root root     0 Apr 23 18:07 proc
+drwxr-xr-x   4 root root  4096 Apr 23 15:11 snap
+drwxr-xr-x  16 root root  4096 Apr 23 13:50 var
+drwxr-xr-x   3 root root  4096 Apr 23 13:36 boot
+drwxr-xr-x   2 root root 12288 Apr 23 13:33 sbin
+drwxr-xr-x  22 root root  4096 Apr 23 13:32 lib
+drwxr-xr-x   2 root root  4096 Apr 23 13:32 bin
+drwxr-xr-x   3 root root  4096 Apr 23 10:44 srv
+drwxr-xr-x   2 root root  4096 Apr 23 10:39 lib64
+lrwxrwxrwx   1 root root    30 Dec 27 11:10 vmlinuz -> boot/vmlinuz-4.4.0-105-generic
+lrwxrwxrwx   1 root root    33 Dec 27 11:10 initrd.img -> boot/initrd.img-4.4.0-105-generic
+lrwxrwxrwx   1 root root    29 Aug 17  2017 vmlinuz.old -> boot/vmlinuz-4.4.0-62-generic
+lrwxrwxrwx   1 root root    32 Aug 17  2017 initrd.img.old -> boot/initrd.img-4.4.0-62-generic
+drwxr-xr-x   4 root root  4096 Aug 17  2017 media
+drwxr-xr-x  10 root root  4096 Aug 17  2017 usr
+drwx------   2 root root 16384 Aug 17  2017 lost+found
+drwxr-xr-x   2 root root  4096 Feb 16  2017 mnt
+drwxr-xr-x   2 root root  4096 Feb 16  2017 opt
+
+
+
+
+LInux目录结构：
+
+/ ： 所有目录都在
+/boot : boot 配置文件、内核和其它启动 时所需的文件
+/etc ： 存放系统配置有关的文件
+/home ： 存放普通用户目录
+/mnt ： 硬盘上手动 挂载的文件系统
+/media ： 自动挂载（加载）的硬盘分区以及类似CD、数码相机等可移动介质。
+/cdrom ： 挂载光盘？
+/opt ： 存放一些可选程序,如某个程序测试版本,安装到该目录的程序的所有数据,库文件都存在同个目录下
+/root ： 系统管理员的目录，对于系统来说，系统管理员好比上帝，他可以对系统做任何操作，比如删除你的文件，一般情况下不要使用root用户。
+/bin ： 存放常用的程序文件（命令文件）。
+/sbin ： 系统管理命令，这里存放的是系统管理员使用的管理程序
+/tmp ： 临时目录，存放临时文件，系统会定期清理该目录下的文件。
+/usr ： 在这个目录下，你可以找到那些不适合放在/bin或/etc目录下的额外的工具。比如游戏、打印工具等。/usr目录包含了许多子目录： /usr/bin目录用于存放程序;/usr/share用于存放一些共享的数据，比如音乐文件或者图标等等;/usr/lib目录用于存放那些不能直接 运行的，但却是许多程序运行所必需的一些函数库文件。/usr/local ： 这个目录一般是用来存放用户自编译安装软件的存放目录；一般是通过源码包安装的软件，如果没有特别指定安装目录的话，一般是安装在这个目录中。
+　　　　/usr/bin/ 非必要可执行文件 (在单用户模式中不需要)；面向所有用户。
+　　　　/usr/include/ 标准包含文件。
+　　　　/usr/lib/ /usr/bin/和/usr/sbin/中二进制文件的库。
+　　　　/usr/sbin/ 非必要的系统二进制文件，例如：大量网络服务的守护进程。
+　　　　/usr/share/ 体系结构无关（共享）数据。
+　　　　/usr/src/ 源代码,例如:内核源代码及其头文件。
+　　　　/usr/X11R6/ X Window系统 版本 11, Release 6.
+　　　　/usr/local/ 本地数据的第三层次， 具体到本台主机。通常而言有进一步的子目录， 例如：bin/、lib/、share/.
+
+/var ： 该目录存放那些经常被修改的文件，包括各种日志、数据文件；
+/var/cache/ 应用程序缓存数据。这些数据是在本地生成的一个耗时的I/O或计算结果。应用程序必须能够再生或恢复数据。缓存的文件可以被删除而不导致数据丢失。
+/var/lib/ 状态信息。 由程序在运行时维护的持久性数据。 例如：数据库、包装的系统元数据等。
+/var/lock/ 锁文件，一类跟踪当前使用中资源的文件。
+/var/log/ 日志文件，包含大量日志文件。
+/var/mail/ 用户的电子邮箱。
+/var/run/ 自最后一次启动以来运行中的系统的信息，例如：当前登录的用户和运行中的守护进程。现已经被/run代替[13]。
+/var/spool/ 等待处理的任务的脱机文件，例如：打印队列和未读的邮件。
+/var/spool/mail/ 用户的邮箱(不鼓励的存储位置)
+/var/tmp/ 在系统重启过程中可以保留的临时文件。
+/lib : 目录是根文件系统上的程序所需的共享库，存放了根文件系统程序运行所需的共享文件。这些文件包含了可被许多程序共享的代码，以避免每个程序都包含有相同的子程序的副本，故可以使得可执行文件变得更小，节省空间。
+/lib32 : 同上
+/lib64 ： 同上
+/lost+found ： 该目录在大多数情况下都是空的。但当突然停电、或者非正常关机后，有些文件就临时存放在；
+/dev : 存放设备文件
+/run ： 代替/var/run目录，
+/proc : 虚拟文件系统，可以在该目录下获取系统信息，这些信息是在内存中由系统自己产生的，该目录的内容不在硬盘上而在内存里；
+/sys ： 和proc一样，虚拟文件系统，可以在该目录下获取系统信息，这些信息是在内存中由系统自己产生的，该目录的内容不在硬盘上而在内存里；SWAP分区的作用：
+
+当系统的物理内存不够用的时候，就需要将物理内存中的一部分空间释放出来，以供当前运行的程序使用。那些被释放的空间可能来自一些很长时间没有什么操作的程序，这些被释放的空间被临时保存到Swap空间中，等到那些程序要运行时，再从Swap中恢复保存的数据到内存中。这样，系统总是在物理内存不够时，才进行Swap交换。
+
+sudo cat /proc/sys/vm/swappiness
+
+该值默认值是60.
+
+swappiness=0的时候表示最大限度使用物理内存，然后才是 swap空间，
+
+swappiness＝100的时候表示积极的使用swap分区，并且把内存上的数据及时的搬运到swap空间里面。
+
+　　--临时性修改：
+
+　　　　[root@rhce ~]# sysctl vm.swappiness=10
+
+　　　　vm.swappiness = 10
+
+　　　　[root@rhce ~]# cat /proc/sys/vm/swappiness
+
+　　　　10
+
+　　　　这里我们的修改已经生效，但是如果我们重启了系统，又会变成60.
+
+ 　　--永久修改：
+
+　　　　在/etc/sysctl.conf 文件里添加如下参数：
+
+　　　　vm.swappiness=10
