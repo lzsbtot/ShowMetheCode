@@ -1,0 +1,19 @@
+# Add user and email for git
+
+$ git config --global user.name lzsbtot
+$ git config --global user.email 378364317@qq.com
+
+
+
+# Create SSH key and add it in github
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/EFJKMNT/.ssh/id_rsa):
+
+# press enter to generate ssh key
+
+$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFEQrJj5mZ2wwOJ1L/03npx7loLNiwWv51rtolwPMWVBwLwAZFYGJ5ghMqSaJ7fUBZNGoUFJLPdmsSyQuS9adFHVAC/q2tzFu52qec84gocKrOV38oEZ1KsLeN0m0QpuorlAcpadUQ3kQEc8XLI74dFDOVHQf26gK5DlMOax+FcKPODpM4F/FYp3P4kwjvydqBaDwUacYQ2BW0ssdRsPpYAyAHlbkgNe4rZ7Q9/CKI5h9b8epojtMgi8qel4X4NN69l+uRoeru3kKFpy7bOSn0eU/0n+qUVNLa2IrLpyjJZQOQ+2jl6q29C2FegsX217YaICtTKB+1xiIof4F6xaUj 378364317@qq.com
+
+$ Add the ssh key into github
+# Setting->SSH key
