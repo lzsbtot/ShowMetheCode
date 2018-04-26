@@ -1,65 +1,108 @@
+From <https://git-scm.com/docs>
+
 Setup and Config
-	• git
-	• config
-	• help
+    • git
+    • config
+    • help
+    --------------------- example ---------------------------
+    $ git config --global user.name lzsbtot
+    $ git config --global user.email 378364317@qq.com
+
+    $ git config --list | grep user
+    user.name=lzsbtot
+    user.email=378364317@qq.com
+
 Getting and Creating Projects
-	• init
-	• clone
+    • init
+    • clone
+    --------------------- example ---------------------------
+    efjkmnt@CN00052386 MINGW64 ~/git
+    $ git clone https://github.com/lzsbtot/ShowMetheCode.git
+    Cloning into 'ShowMetheCode'...
+    warning: You appear to have cloned an empty repository.
+
+    efjkmnt@CN00052386 MINGW64 ~/git
+    $ ll
+    total 0
+    drwxr-xr-x 1 efjkmnt 1049089 0 Apr 24 16:37 _git-aliecs_/
+    drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 ShowMetheCode/
+
+
 Basic Snapshotting
-	• add
-	• status
-	• diff
-	• commit
-	• reset
-	• rm
-	• mv
+    • add
+    • status
+    • diff
+    • commit
+    • reset
+    • rm
+    • mv
+    --------------------- example ---------------------------
+    efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/learn-linux (master)
+    $ git mv linux-UserManagement linux-UserManagement.txt
+
+    efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/learn-linux (master)
+    $ git status
+    On branch master
+    Your branch is up to date with 'origin/master'.
+
+    Changes to be committed:
+    (use "git reset HEAD <file>..." to unstage)
+
+            renamed:    linux-UserManagement -> linux-UserManagement.txt
+
+    Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git checkout -- <file>..." to discard changes in working directory)
+
+            modified:   ../learn-git/git-operation
+
+
+    efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/learn-linux (master)
+    $ git add linux-UserManagement.txt
+
+    efjkmnt@CN00052386 MINGW64 ~/git/ShowMetheCode/learn-linux (master)
+    $ git commit -m "Add file extension"
+    [master 40085a3] Add file extension
+    1 file changed, 0 insertions(+), 0 deletions(-)
+    rename learn-linux/{linux-UserManagement => linux-UserManagement.txt} (100%)
+
 Branching and Merging
-	• branch
-	• checkout
-	• merge
-	• mergetool
-	• log
-	• stash
-	• tag
-	• worktree
+    • branch
+    • checkout
+    • merge
+    • mergetool
+    • log
+    • stash
+    • tag
+    • worktree
 Sharing and Updating Projects
-	• fetch
-	• pull
-	• push
-	• remote
-	• submodule
+    • fetch
+    • pull
+    • push
+    • remote
+    • submodule
 Inspection and Comparison
-	• show
-	• log
-	• diff
-	• shortlog
-	• describe
+    • show
+    • log
+    • diff
+    • shortlog
+    • describe
 Patching
-	• apply
-	• cherry-pick
-	• diff
-	• rebase
-	• revert
+    • apply
+    • cherry-pick
+    • diff
+    • rebase
+    • revert
 Debugging
-	• bisect
-	• blame
-	• grep
-
-From <https://git-scm.com/docs> 
+    • bisect
+    • blame
+    • grep
 
 
 
 
-efjkmnt@CN00052386 MINGW64 ~/git
-$ git clone https://github.com/lzsbtot/ShowMetheCode.git
-Cloning into 'ShowMetheCode'...
-warning: You appear to have cloned an empty repository.
 
-efjkmnt@CN00052386 MINGW64 ~/git
-$ ll
-total 0
-drwxr-xr-x 1 efjkmnt 1049089 0 Apr 24 16:37 _git-aliecs_/
-drwxr-xr-x 1 efjkmnt 1049089 0 Apr 25 15:26 ShowMetheCode/
+
 
 efjkmnt@CN00052386 MINGW64 ~/git
 $ cd ShowMetheCode/
