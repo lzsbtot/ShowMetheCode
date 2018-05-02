@@ -1,25 +1,16 @@
-ls
-
-    ls ： 列出目标目录中所有的子目录和文件
-
+ls :
+    列出目标目录中所有的子目录和文件
     格式：ls [选项] [目录名] 
-
     -a 用于显示所有文件和子目录(保罗点文件)。
-
     -l 除了文件名之外，还将文件的权限、所有者、文件大小等信息详细列出来。
-
     -r 将目录的内容清单以英文字母顺序的逆序显示。
-
     -t 按文件修改时间进行排序，而不是按文件名进行排序。
-
     -A 同-a，但不列出“.”(表示当前目录)和“..”(表示当前目录的父目录)。
-
     -F 在列出的文件名和目录名后添加标志。例如，在可执行文件后添加“*”，在目录名后添加“/”以区分不同的类型。
-
     -R 如果目标目录及其子目录中有文件，就列出所有的文件。        
 
 
-ll
+ll :
     在某些host里可以用ll命令， 实际上是用alias自定义的ls命令。在~/.bashrc中可以看到。
         root@AliECS:/# cat ~/.bashrc | grep "alias "
         alias ls='ls --color=auto'
@@ -42,11 +33,41 @@ alias :
 
 wc :
     统计指定文件中的字节数、字数、行数，并将统计结果显示输出
-
         -c 统计字节数。
         -l 统计行数。
         -m 统计字符数。这个标志不能与 -c 标志一起使用。
         -w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串
+
+touch :
+    改变文件或目录的时间，文件不存在时会创建一个空文件。
+        -a                     change only the access time
+        -c, --no-create        do not create any files
+        -d, --date=STRING      parse STRING and use it instead of current time
+        -f                     (ignored)
+        -h, --no-dereference   affect each symbolic link instead of any referenced
+                                file (useful only on systems that can change the
+                                timestamps of a symlink)
+        -m                     change only the modification time
+        -r, --reference=FILE   use this file's times instead of current time
+        -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time
+
+stat :
+    查看文件信息
+        root@AliECS:~/Downloads# stat test.log 
+        File: 'test.log'
+        Size: 0         	Blocks: 0          IO Block: 4096   regular empty file
+        Device: fd01h/64769d	Inode: 1056924     Links: 1
+        Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+        Access: 2018-05-02 19:33:33.555262230 +0800
+        Modify: 2018-05-02 19:33:33.555262230 +0800
+        Change: 2018-05-02 19:33:33.555262230 +0800
+        Birth: -
+
+cp :
+    复制文件/目录。
+        cp -i  SOURCE DEST  #   如果遇到需要覆盖的情况，则提示
+        cp -r  dir1  dir2  # 若给出的源文件是一目录文件，此时cp将递归复制该目录下所有的子目录和文件。此时目标文件必须为一个目录名
+        cp -p  file1 file2  #  此时cp除复制源文件的内容外，还将把其修改时间和访问权限也复制到新文件中。
 
 cut :
 
