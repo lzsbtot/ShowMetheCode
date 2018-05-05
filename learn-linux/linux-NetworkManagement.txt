@@ -1,0 +1,9 @@
+nmtui:
+
+ifconfig:
+
+route:
+
+ping:
+
+traceroute:
