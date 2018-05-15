@@ -25,5 +25,24 @@
     
     目录中必须包含 __init__.py 文件。
 
-2. import package/module:
-    
+2. 从 package 中导入 module 的三种方式:
+    2.1 import Package.specific_submodule - 只导入包里的特定模块
+        必需通过完整的名称来引用
+        import sound.effects.echo
+        sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+
+    2.2 from Package import specific_submodule - 导入并加载子模块
+        没有包前缀的情况下也可以使用
+        from sound.effects import echo
+        echo.echofilter(input, output, delay=0.7, atten=4)
+
+    2.3 from Package import * - 从 * 导入包，需要提供一个明确的包索引
+        执行 from package import * 时，如果包中的 __init__.py 代码定义了一个名为 
+        __all__ 的列表，就会按照列表中给出的模块名进行导入。
+        例如， sound/effects/__init__.py 这个文件可能包括如下代码:
+        __all__ = ["echo", "surround", "reverse"]
+        from sound.effects import *
+
+        如果没有定义 __all__ ， from sound.effects import * 语句 不会从 sound.effects
+        包中导入所有的子模块。无论包中定义多少命名，只能确定的是导入了 sound.effects 
+        包（可能会运行 __init__.py 中的初始化代码）以及包中定义的所有命名会随之导入。
