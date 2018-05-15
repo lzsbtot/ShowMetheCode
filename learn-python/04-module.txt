@@ -1,0 +1,29 @@
+Python 里的 module：
+
+1. 定义module：
+    # printh.py
+    def print_hello():
+        print("hello python!\n")
+    #把这个function存为printh.py, 它就成为一个module, 可以在别的程序中引用。
+
+2. 使用module的两种方式：
+    # test_module.py
+    import printh
+    printh.print_hello()
+
+    #或者使用下面的方式调用：
+    from printh import print_hello
+    print_hello()
+
+3. __name__：
+    #模块的模块名（做为一个字符串）可以由全局变量 __name__ 得到。
+
+    # printh.py
+    def print_hello():
+        print("hello python!\n")
+
+    if __name__ == "__main__":
+        print("run as script")
+
+    #当printh.py作为module引用时， 他的"__name__" == "printh",所以第二段print代码不会执行。
+    #当printh.py作为script运行是， 他的"__name__" == "__main__"， 第二段print代码会执行。
