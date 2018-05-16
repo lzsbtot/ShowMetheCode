@@ -1,25 +1,44 @@
-import os
-import shutil
+操作文件的lib
+
+1. os
+    import os
+    应该用 import os 风格而非 from os import *。
+    
+    os.getcwd()
+    os.chdir('/tmp')
+    os.system('mkdir today')
+
+
+
+
 import pathlib
-import glob
-import sys
-import re
 
 
 
-os.getcwd()
-os.chdir('/tmp')
-os.system('mkdir today')
 
+
+  
+import shutil
 
 shutil.copyfile('data.db', 'archive.db')
 shutil.move('/build/executables', 'installdir')
 
 
+
+import glob
+
 glob.glob('*.py')
+
+
+
+import sys
 
 print(sys.argv)
 sys.stderr.write('Warning, log file not found starting a new one\n')
+
+
+
+import re
 
 re.findall(r'\bf[a-z]*', 'which foot or hand fell fastest')
 
