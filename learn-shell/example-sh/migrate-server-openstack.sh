@@ -1,4 +1,7 @@
 
+#!/usr/bin/bash
+# Migrate a nova server to another host
+
 if [ $# -eq 1 ]
 then
     server=$1
