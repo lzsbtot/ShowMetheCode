@@ -1,0 +1,197 @@
+http://tldp.org/LDP/abs/html/index.html
+
+
+###Chapter###
+Chapter 1. Shell Programming!
+
+    不适合使用shell scripts的情景：
+    When not to use shell scripts：
+    1   Resource-intensive tasks, especially where speed is a factor (sorting, hashing, recursion [2] ...)
+
+    2   Procedures involving heavy-duty math operations, especially floating point arithmetic, arbitrary precision calculations, or complex numbers (use C++ or FORTRAN instead)
+
+    3   Cross-platform portability required (use C or Java instead)
+
+    4   Complex applications, where structured programming is a necessity (type-checking of variables, function prototypes, etc.)
+
+    5   Mission-critical applications upon which you are betting the future of the company
+
+    6   Situations where security is important, where you need to guarantee the integrity of your system and protect against intrusion, cracking, and vandalism
+
+    7   Project consists of subcomponents with interlocking dependencies
+
+    8   Extensive file operations required (Bash is limited to serial file access, and that only in a particularly clumsy and inefficient line-by-line fashion.)
+
+    9   Need native support for multi-dimensional arrays
+
+    10  Need data structures, such as linked lists or trees
+
+    11  Need to generate / manipulate graphics or GUIs
+
+    12  Need direct access to system hardware or external peripherals
+
+    13  Need port or socket I/O
+
+    14  Need to use libraries or interface with legacy code
+
+    15  Proprietary, closed-source applications (Shell scripts put the source code right out in the open for all the world to see.)
+
+
+###Chapter###
+Chapter 2. Starting Off With a Sha-Bang
+    Example 2-1. cleanup: A script to clean up log files in /var/log
+    -----------------------------------------------------------------
+        # Cleanup
+        # Run as root, of course.
+
+        cd /var/log
+        cat /dev/null > messages
+        cat /dev/null > wtmp
+        echo "Log files cleaned up."
+    -----------------------------------------------------------------
+    /var/log/messages 和 /var/log/wtmp 为我们要清楚的log文件
+    怎么清除一个log文件的内容？执行：cat /dev/null > logfile
+
+    Example 2-2. cleanup: An improved clean-up script
+        
+    -----------------------------------------------------------------
+        #!/bin/bash
+        # Proper header for a Bash script.
+
+        # Cleanup, version 2
+
+        # Run as root, of course.
+        # Insert code here to print error message and exit if not root.
+
+        LOG_DIR=/var/log
+        # Variables are better than hard-coded values.
+        cd $LOG_DIR
+
+        cat /dev/null > messages
+        cat /dev/null > wtmp
+
+
+        echo "Logs cleaned up."
+
+        exit #  The right and proper method of "exiting" from a script.
+            #  A bare "exit" (no parameter) returns the exit status
+            #+ of the preceding command. 
+    -----------------------------------------------------------------
+    #! 用来表明用什么环境来运行此脚本, 这里#!/bin/bash(也可以写做#!/bin/sh)表示用 Bourne shell 运行
+    #!实际上是一个 2 字节的魔法数字, 这是指定一个文件类型的特殊标记, 需要注意的是在有些 UNIX (those based on 4.2 BSD), 
+    中需要4字节, 也就是#!后面要加一个空格：#! /bin/bash
+    shell 的Variables赋值符两边不能有空格, variable=value
+
+
+    -----------------------------------------------------------------
+    Example 2-3. cleanup: An enhanced and generalized version of above scripts.
+        
+        #!/bin/bash
+        # Cleanup, version 3
+
+        #  Warning:
+        #  -------
+        #  This script uses quite a number of features that will be explained
+        #+ later on.
+        #  By the time you've finished the first half of the book,
+        #+ there should be nothing mysterious about it.
+
+
+
+        LOG_DIR=/var/log
+        ROOT_UID=0     # Only users with $UID 0 have root privileges.
+        LINES=50       # Default number of lines saved.
+        E_XCD=86       # Can't change directory?
+        E_NOTROOT=87   # Non-root exit error.
+
+
+        # Run as root, of course.
+        if [ "$UID" -ne "$ROOT_UID" ]
+        then
+        echo "Must be root to run this script."
+        exit $E_NOTROOT
+        fi  
+
+        if [ -n "$1" ]
+        # Test whether command-line argument is present (non-empty).
+        then
+        lines=$1
+        else  
+        lines=$LINES # Default, if not specified on command-line.
+        fi  
+
+
+        #  Stephane Chazelas suggests the following,
+        #+ as a better way of checking command-line arguments,
+        #+ but this is still a bit advanced for this stage of the tutorial.
+        #
+        #    E_WRONGARGS=85  # Non-numerical argument (bad argument format).
+        #
+        #    case "$1" in
+        #    ""      ) lines=50;;
+        #    *[!0-9]*) echo "Usage: `basename $0` lines-to-cleanup";
+        #     exit $E_WRONGARGS;;
+        #    *       ) lines=$1;;
+        #    esac
+        #
+        #* Skip ahead to "Loops" chapter to decipher all this.
+
+
+        cd $LOG_DIR
+
+        if [ `pwd` != "$LOG_DIR" ]  # or   if [ "$PWD" != "$LOG_DIR" ]
+                                    # Not in /var/log?
+        then
+        echo "Can't change to $LOG_DIR."
+        exit $E_XCD
+        fi  # Doublecheck if in right directory before messing with log file.
+
+        # Far more efficient is:
+        #
+        # cd /var/log || {
+        #   echo "Cannot change to necessary directory." >&2
+        #   exit $E_XCD;
+        # }
+
+
+
+
+        tail -n $lines messages > mesg.temp # Save last section of message log file.
+        mv mesg.temp messages               # Rename it as system log file.
+
+
+        #  cat /dev/null > messages
+        #* No longer needed, as the above method is safer.
+
+        cat /dev/null > wtmp  #  ': > wtmp' and '> wtmp'  have the same effect.
+        echo "Log files cleaned up."
+        #  Note that there are other log files in /var/log not affected
+        #+ by this script.
+
+        exit 0
+        #  A zero return value from the script upon exit indicates success
+        #+ to the shell.
+
+    -----------------------------------------------------------------
+        怎么判断当前用户是不是root？ root 的 UID 为 0.
+            root@AliECS:/var/log# echo $UID
+            0
+            root@AliECS:/var/log# su lzsbtot
+            lzsbtot@AliECS:/var/log$ echo $UID
+            1001
+            lzsbtot@AliECS:/var/log$ 
+
+        if 条件里的关系运算：
+            -ne     检测两个数是否不相等，不相等返回 true。[ $a -ne $b ] 返回 true。
+        if 条件里的字符串运算符：
+            -n      检测字符串长度是否不为0，不为0返回 true。[ -n $a ] 返回 true。
+
+        shell 里运算符包括
+            算术运算符
+            关系运算符
+            布尔运算符
+            逻辑运算符
+            字符串运算符
+            文件测试运算符
+        shell 里条件表达式要放在[ ]里 并且要加空格：[ condition-express ]。
+    -----------------------------------------------------------------
