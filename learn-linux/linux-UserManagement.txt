@@ -1,0 +1,30 @@
+查看当前登录的用户：
+1. last | grep still
+
+    root@AliECS:~# last | grep still
+    lzsbtot  pts/2        59.46.167.194    Mon May 21 16:09   still logged in
+    root     pts/1        59.46.167.194    Mon May 21 15:57   still logged in
+    root     pts/0        49.51.230.109    Sat May 19 22:01   still logged in
+
+
+2. w
+
+    root@AliECS:/sbin# w
+    16:18:05 up 27 days, 22:10,  3 users,  load average: 0.03, 0.01, 0.00
+    USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+    root     pts/0    49.51.230.109    Sat22   41:32m  0.05s  0.02s bash
+    root     pts/1    59.46.167.194    15:57    3.00s  0.06s  0.00s w
+    lzsbtot  pts/2    59.46.167.194    16:09    8:37   0.00s  0.00s -sh
+
+3. users
+
+    root@AliECS:/sbin# users
+    lzsbtot root root
+
+4. who
+
+    root@AliECS:/sbin# who
+    root     pts/0        2018-05-19 22:01 (49.51.230.109)
+    root     pts/1        2018-05-21 15:57 (59.46.167.194)
+    lzsbtot  pts/2        2018-05-21 16:09 (59.46.167.194)
+    root@AliECS:/sbin# 

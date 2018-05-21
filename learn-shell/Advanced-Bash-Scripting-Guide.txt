@@ -195,3 +195,28 @@ Chapter 2. Starting Off With a Sha-Bang
             文件测试运算符
         shell 里条件表达式要放在[ ]里 并且要加空格：[ condition-express ]。
     -----------------------------------------------------------------
+
+###Chapter###
+2.1. Invoking the script
+
+2.2. Preliminary Exercises
+        Write a script that upon invocation shows the time and date, lists all logged-in users,
+        and gives the system uptime. The script then saves this information to a logfile.
+
+        #!/bin/bash
+        # get some informatio
+        if [  -n "$1" ]
+        then
+            LOG_FILE=$1
+        else
+            LOG_FILE="default.log"
+        fi
+
+        COMMAND_LIST="date who uptime"
+
+        for command in $COMMAND_LIST
+        do
+            echo "the output of $command is :" >> $LOG_FILE
+            $command >> $LOG_FILE
+            echo >> $LOG_FILE
+        done
