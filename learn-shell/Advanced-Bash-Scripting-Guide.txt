@@ -1,4 +1,4 @@
-http://tldp.org/LDP/abs/html/index.html
+######### ABS 学习笔记 http://tldp.org/LDP/abs/html/index.html #############
 
 
 ###Chapter###
@@ -49,7 +49,7 @@ Chapter 2. Starting Off With a Sha-Bang
         cat /dev/null > wtmp
         echo "Log files cleaned up."
     -----------------------------------------------------------------
-    /var/log/messages 和 /var/log/wtmp 为我们要清楚的log文件
+    /var/log/messages 和 /var/log/wtmp 为我们要清除的log文件
     怎么清除一个log文件的内容？执行：cat /dev/null > logfile
 
     Example 2-2. cleanup: An improved clean-up script
@@ -204,7 +204,7 @@ Chapter 2. Starting Off With a Sha-Bang
         and gives the system uptime. The script then saves this information to a logfile.
 
         #!/bin/bash
-        # get some informatio
+        # get some information
         if [  -n "$1" ]
         then
             LOG_FILE=$1
@@ -220,3 +220,35 @@ Chapter 2. Starting Off With a Sha-Bang
             $command >> $LOG_FILE
             echo >> $LOG_FILE
         done
+
+    -----------------------------------------------------------------
+        查看当前登录的用户的几种方法：
+        1. last | grep still
+
+            root@AliECS:~# last | grep still
+            lzsbtot  pts/2        59.46.167.194    Mon May 21 16:09   still logged in
+            root     pts/1        59.46.167.194    Mon May 21 15:57   still logged in
+            root     pts/0        49.51.230.109    Sat May 19 22:01   still logged in
+
+        2. w
+
+            root@AliECS:/sbin# w
+            16:18:05 up 27 days, 22:10,  3 users,  load average: 0.03, 0.01, 0.00
+            USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+            root     pts/0    49.51.230.109    Sat22   41:32m  0.05s  0.02s bash
+            root     pts/1    59.46.167.194    15:57    3.00s  0.06s  0.00s w
+            lzsbtot  pts/2    59.46.167.194    16:09    8:37   0.00s  0.00s -sh
+
+        3. users
+
+            root@AliECS:/sbin# users
+            lzsbtot root root
+
+        4. who
+
+            root@AliECS:/sbin# who
+            root     pts/0        2018-05-19 22:01 (49.51.230.109)
+            root     pts/1        2018-05-21 15:57 (59.46.167.194)
+            lzsbtot  pts/2        2018-05-21 16:09 (59.46.167.194)
+            root@AliECS:/sbin# 
+    -----------------------------------------------------------------
