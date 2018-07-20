@@ -19,7 +19,7 @@ case $input in
     for file in `ls`
     do 
         ext=${file#*.}
-        if [ $ext == "go"]
+        if [ $ext == "go" ]
         then
             dir=${file%%.*}
             mkdir $dir
