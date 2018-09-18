@@ -1,30 +1,70 @@
 查看当前登录的用户：
-1. last | grep still
+    1. last | grep still
 
-    root@AliECS:~# last | grep still
-    lzsbtot  pts/2        59.46.167.194    Mon May 21 16:09   still logged in
-    root     pts/1        59.46.167.194    Mon May 21 15:57   still logged in
-    root     pts/0        49.51.230.109    Sat May 19 22:01   still logged in
+        root@AliECS:~# last | grep still
+        lzsbtot  pts/2        59.46.167.194    Mon May 21 16:09   still logged in
+        root     pts/1        59.46.167.194    Mon May 21 15:57   still logged in
+        root     pts/0        49.51.230.109    Sat May 19 22:01   still logged in
+
+    2. w
+
+        root@AliECS:/sbin# w
+        16:18:05 up 27 days, 22:10,  3 users,  load average: 0.03, 0.01, 0.00
+        USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+        root     pts/0    49.51.230.109    Sat22   41:32m  0.05s  0.02s bash
+        root     pts/1    59.46.167.194    15:57    3.00s  0.06s  0.00s w
+        lzsbtot  pts/2    59.46.167.194    16:09    8:37   0.00s  0.00s -sh
+
+    3. users
+
+        root@AliECS:/sbin# users
+        lzsbtot root root
+
+    4. who
+
+        root@AliECS:/sbin# who
+        root     pts/0        2018-05-19 22:01 (49.51.230.109)
+        root     pts/1        2018-05-21 15:57 (59.46.167.194)
+        lzsbtot  pts/2        2018-05-21 16:09 (59.46.167.194)
+        root@AliECS:/sbin# 
 
 
-2. w
+用户的属性：
 
-    root@AliECS:/sbin# w
-    16:18:05 up 27 days, 22:10,  3 users,  load average: 0.03, 0.01, 0.00
-    USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-    root     pts/0    49.51.230.109    Sat22   41:32m  0.05s  0.02s bash
-    root     pts/1    59.46.167.194    15:57    3.00s  0.06s  0.00s w
-    lzsbtot  pts/2    59.46.167.194    16:09    8:37   0.00s  0.00s -sh
+    /etc/passwd
+        root@AliECS:~# cat /etc/passwd
+        root:x:0:0:root:/root:/bin/bash
+        mysql:x:125:133:MySQL Server,,,:/nonexistent:/bin/false
+        git:x:1000:1000:,,,:/home/git:/usr/bin/git-shell
+        lzsbtot:x:1001:1001::/home/lzsbtot/:
 
-3. users
+        7段参数解释：
+        1. username
+        2. passwd, 为空表示登录时不需要密码, x表示隐藏密码(在/etc/shadow中)
+        3. 用户的uid, 一般情况下root为0, 1-499默认为系统账号, 有的更大些到1000, 500-65535为用户的可登录账号, 有的系统从1000开始.
+        4. group ID
+        5. 用户的账号说明解释
+        6. home 目录
+        7. 用户登录后要执行的第一个进程
 
-    root@AliECS:/sbin# users
-    lzsbtot root root
+    /etc/shadow
+        root@AliECS:~# cat /etc/shadow
+        root:$6$m0Yy.M8.$P/l4KJWMuxM7KNAjmePplqZRDTrSV452kF7d9VOOYKC9iIQgttgajTrcqFS65yoAIFO/T3rW2s1QuQRK9mJBQ1:17644:0:99999:7:::
+        git:$6$TLql3kwF$vuDJ0LrX/fF9diNkg4exsJSCGz0StkSo.glE/QLJWD5PrZerbDdSfpiD2gWT1Oe7L4F3CjeD.pflMMQ5DxGxV1:17645:0:99999:7:::
+        lzsbtot:$6$Li3zLpYB$s1pnS/PSOqN63f8he16Rj9nZHvKT0d/ejzSklsjdUxSQnsRguVgDdiUZ4reZTWYXKYIxyrD2PJnWFI4Dp4OSv/:17672:0:99999:7:::
 
-4. who
+        9段参数解释：
 
-    root@AliECS:/sbin# who
-    root     pts/0        2018-05-19 22:01 (49.51.230.109)
-    root     pts/1        2018-05-21 15:57 (59.46.167.194)
-    lzsbtot  pts/2        2018-05-21 16:09 (59.46.167.194)
-    root@AliECS:/sbin# 
+        字段    含义
+        1    用户名
+        2    用户的密码加密字段
+        3    密码已经使用的日期
+        4    密码最少多少天之后可以修改
+        5    密码多少天之后必须修改
+        6    密码修改之前几天提醒我修改
+        7    要是没有修改延长几天
+        8    无论怎样到这个时间过期
+        9    保留字段，目前无含义
+
+添加/修改/删除 用户：
+    useradd

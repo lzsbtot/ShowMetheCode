@@ -77,7 +77,7 @@ cat/more/less/head/tail :
 
 find/which/who/whereis :
 
-chown/chmod :
+chown/chmod/umask :
 
 tee :
 
