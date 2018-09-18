@@ -83,6 +83,9 @@ tee :
 
 >/>>/1>/2>/&> :
 
-tar/zip/unzip :
-
+tar/zip/unzip/gzip/gunzip :
+    tar:
+        #在linux里tar命令如果带参数z， 会自动调用gzip，但是如果是SunOS等Unix系统， tar命令不支持参数z
+    zip/gzip:
+        #zip可以将多个文件压缩在一起， 而gzip只能压缩单个文件，gzip一般和tar配合使用。
 
