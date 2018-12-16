@@ -1,0 +1,100 @@
+12. Data Persistence
+********************
+
+The modules described in this chapter support storing Python data in a
+persistent form on disk.  The "pickle" and "marshal" modules can turn
+many Python data types into a stream of bytes and then recreate the
+objects from the bytes.  The various DBM-related modules support a
+family of hash-based file formats that store a mapping of strings to
+other strings.
+
+The list of modules described in this chapter is:
+
+* 12.1. "pickle" — Python object serialization
+
+  * 12.1.1. Relationship to other Python modules
+
+    * 12.1.1.1. Comparison with "marshal"
+
+    * 12.1.1.2. Comparison with "json"
+
+  * 12.1.2. Data stream format
+
+  * 12.1.3. Module Interface
+
+  * 12.1.4. What can be pickled and unpickled?
+
+  * 12.1.5. Pickling Class Instances
+
+    * 12.1.5.1. Persistence of External Objects
+
+    * 12.1.5.2. Dispatch Tables
+
+    * 12.1.5.3. Handling Stateful Objects
+
+  * 12.1.6. Restricting Globals
+
+  * 12.1.7. Performance
+
+  * 12.1.8. Examples
+
+* 12.2. "copyreg" — Register "pickle" support functions
+
+  * 12.2.1. Example
+
+* 12.3. "shelve" — Python object persistence
+
+  * 12.3.1. Restrictions
+
+  * 12.3.2. Example
+
+* 12.4. "marshal" — Internal Python object serialization
+
+* 12.5. "dbm" — Interfaces to Unix “databases”
+
+  * 12.5.1. "dbm.gnu" — GNU’s reinterpretation of dbm
+
+  * 12.5.2. "dbm.ndbm" — Interface based on ndbm
+
+  * 12.5.3. "dbm.dumb" — Portable DBM implementation
+
+* 12.6. "sqlite3" — DB-API 2.0 interface for SQLite databases
+
+  * 12.6.1. Module functions and constants
+
+  * 12.6.2. Connection Objects
+
+  * 12.6.3. Cursor Objects
+
+  * 12.6.4. Row Objects
+
+  * 12.6.5. Exceptions
+
+  * 12.6.6. SQLite and Python types
+
+    * 12.6.6.1. Introduction
+
+    * 12.6.6.2. Using adapters to store additional Python types in
+      SQLite databases
+
+      * 12.6.6.2.1. Letting your object adapt itself
+
+      * 12.6.6.2.2. Registering an adapter callable
+
+    * 12.6.6.3. Converting SQLite values to custom Python types
+
+    * 12.6.6.4. Default adapters and converters
+
+  * 12.6.7. Controlling Transactions
+
+  * 12.6.8. Using "sqlite3" efficiently
+
+    * 12.6.8.1. Using shortcut methods
+
+    * 12.6.8.2. Accessing columns by name instead of by index
+
+    * 12.6.8.3. Using the connection as a context manager
+
+  * 12.6.9. Common issues
+
+    * 12.6.9.1. Multithreading

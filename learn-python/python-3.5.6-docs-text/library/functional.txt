@@ -1,0 +1,26 @@
+10. Functional Programming Modules
+**********************************
+
+The modules described in this chapter provide functions and classes
+that support a functional programming style, and general operations on
+callables.
+
+The following modules are documented in this chapter:
+
+* 10.1. "itertools" — Functions creating iterators for efficient
+  looping
+
+  * 10.1.1. Itertool functions
+
+  * 10.1.2. Itertools Recipes
+
+* 10.2. "functools" — Higher-order functions and operations on
+  callable objects
+
+  * 10.2.1. "partial" Objects
+
+* 10.3. "operator" — Standard operators as functions
+
+  * 10.3.1. Mapping Operators to Functions
+
+  * 10.3.2. Inplace Operators

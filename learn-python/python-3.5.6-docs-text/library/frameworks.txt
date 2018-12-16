@@ -1,0 +1,93 @@
+24. Program Frameworks
+**********************
+
+The modules described in this chapter are frameworks that will largely
+dictate the structure of your program.  Currently the modules
+described  here are all oriented toward writing command-line
+interfaces.
+
+The full list of modules described in this chapter is:
+
+* 24.1. "turtle" — Turtle graphics
+
+  * 24.1.1. Introduction
+
+  * 24.1.2. Overview of available Turtle and Screen methods
+
+    * 24.1.2.1. Turtle methods
+
+    * 24.1.2.2. Methods of TurtleScreen/Screen
+
+  * 24.1.3. Methods of RawTurtle/Turtle and corresponding functions
+
+    * 24.1.3.1. Turtle motion
+
+    * 24.1.3.2. Tell Turtle’s state
+
+    * 24.1.3.3. Settings for measurement
+
+    * 24.1.3.4. Pen control
+
+      * 24.1.3.4.1. Drawing state
+
+      * 24.1.3.4.2. Color control
+
+      * 24.1.3.4.3. Filling
+
+      * 24.1.3.4.4. More drawing control
+
+    * 24.1.3.5. Turtle state
+
+      * 24.1.3.5.1. Visibility
+
+      * 24.1.3.5.2. Appearance
+
+    * 24.1.3.6. Using events
+
+    * 24.1.3.7. Special Turtle methods
+
+    * 24.1.3.8. Compound shapes
+
+  * 24.1.4. Methods of TurtleScreen/Screen and corresponding
+    functions
+
+    * 24.1.4.1. Window control
+
+    * 24.1.4.2. Animation control
+
+    * 24.1.4.3. Using screen events
+
+    * 24.1.4.4. Input methods
+
+    * 24.1.4.5. Settings and special methods
+
+    * 24.1.4.6. Methods specific to Screen, not inherited from
+      TurtleScreen
+
+  * 24.1.5. Public classes
+
+  * 24.1.6. Help and configuration
+
+    * 24.1.6.1. How to use help
+
+    * 24.1.6.2. Translation of docstrings into different languages
+
+    * 24.1.6.3. How to configure Screen and Turtles
+
+  * 24.1.7. "turtledemo" — Demo scripts
+
+  * 24.1.8. Changes since Python 2.6
+
+  * 24.1.9. Changes since Python 3.0
+
+* 24.2. "cmd" — Support for line-oriented command interpreters
+
+  * 24.2.1. Cmd Objects
+
+  * 24.2.2. Cmd Example
+
+* 24.3. "shlex" — Simple lexical analysis
+
+  * 24.3.1. shlex Objects
+
+  * 24.3.2. Parsing Rules

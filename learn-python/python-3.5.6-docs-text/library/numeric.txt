@@ -1,0 +1,97 @@
+9. Numeric and Mathematical Modules
+***********************************
+
+The modules described in this chapter provide numeric and math-related
+functions and data types. The "numbers" module defines an abstract
+hierarchy of numeric types. The "math" and "cmath" modules contain
+various mathematical functions for floating-point and complex numbers.
+The "decimal" module supports exact representations of decimal
+numbers, using arbitrary precision arithmetic.
+
+The following modules are documented in this chapter:
+
+* 9.1. "numbers" — Numeric abstract base classes
+
+  * 9.1.1. The numeric tower
+
+  * 9.1.2. Notes for type implementors
+
+    * 9.1.2.1. Adding More Numeric ABCs
+
+    * 9.1.2.2. Implementing the arithmetic operations
+
+* 9.2. "math" — Mathematical functions
+
+  * 9.2.1. Number-theoretic and representation functions
+
+  * 9.2.2. Power and logarithmic functions
+
+  * 9.2.3. Trigonometric functions
+
+  * 9.2.4. Angular conversion
+
+  * 9.2.5. Hyperbolic functions
+
+  * 9.2.6. Special functions
+
+  * 9.2.7. Constants
+
+* 9.3. "cmath" — Mathematical functions for complex numbers
+
+  * 9.3.1. Conversions to and from polar coordinates
+
+  * 9.3.2. Power and logarithmic functions
+
+  * 9.3.3. Trigonometric functions
+
+  * 9.3.4. Hyperbolic functions
+
+  * 9.3.5. Classification functions
+
+  * 9.3.6. Constants
+
+* 9.4. "decimal" — Decimal fixed point and floating point arithmetic
+
+  * 9.4.1. Quick-start Tutorial
+
+  * 9.4.2. Decimal objects
+
+    * 9.4.2.1. Logical operands
+
+  * 9.4.3. Context objects
+
+  * 9.4.4. Constants
+
+  * 9.4.5. Rounding modes
+
+  * 9.4.6. Signals
+
+  * 9.4.7. Floating Point Notes
+
+    * 9.4.7.1. Mitigating round-off error with increased precision
+
+    * 9.4.7.2. Special values
+
+  * 9.4.8. Working with threads
+
+  * 9.4.9. Recipes
+
+  * 9.4.10. Decimal FAQ
+
+* 9.5. "fractions" — Rational numbers
+
+* 9.6. "random" — Generate pseudo-random numbers
+
+  * 9.6.1. Notes on Reproducibility
+
+  * 9.6.2. Examples and Recipes
+
+* 9.7. "statistics" — Mathematical statistics functions
+
+  * 9.7.1. Averages and measures of central location
+
+  * 9.7.2. Measures of spread
+
+  * 9.7.3. Function details
+
+  * 9.7.4. Exceptions

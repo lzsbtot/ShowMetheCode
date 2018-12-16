@@ -1,0 +1,15 @@
+15. Cryptographic Services
+**************************
+
+The modules described in this chapter implement various algorithms of
+a cryptographic nature.  They are available at the discretion of the
+installation. On Unix systems, the "crypt" module may also be
+available. Here’s an overview:
+
+* 15.1. "hashlib" — Secure hashes and message digests
+
+  * 15.1.1. Hash algorithms
+
+  * 15.1.2. Key derivation
+
+* 15.2. "hmac" — Keyed-Hashing for Message Authentication

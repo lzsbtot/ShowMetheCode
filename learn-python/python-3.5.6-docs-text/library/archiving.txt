@@ -1,0 +1,61 @@
+13. Data Compression and Archiving
+**********************************
+
+The modules described in this chapter support data compression with
+the zlib, gzip, bzip2 and lzma algorithms, and the creation of ZIP-
+and tar-format archives.  See also Archiving operations provided by
+the "shutil" module.
+
+* 13.1. "zlib" — Compression compatible with **gzip**
+
+* 13.2. "gzip" — Support for **gzip** files
+
+  * 13.2.1. Examples of usage
+
+* 13.3. "bz2" — Support for **bzip2** compression
+
+  * 13.3.1. (De)compression of files
+
+  * 13.3.2. Incremental (de)compression
+
+  * 13.3.3. One-shot (de)compression
+
+* 13.4. "lzma" — Compression using the LZMA algorithm
+
+  * 13.4.1. Reading and writing compressed files
+
+  * 13.4.2. Compressing and decompressing data in memory
+
+  * 13.4.3. Miscellaneous
+
+  * 13.4.4. Specifying custom filter chains
+
+  * 13.4.5. Examples
+
+* 13.5. "zipfile" — Work with ZIP archives
+
+  * 13.5.1. ZipFile Objects
+
+  * 13.5.2. PyZipFile Objects
+
+  * 13.5.3. ZipInfo Objects
+
+  * 13.5.4. Command-Line Interface
+
+    * 13.5.4.1. Command-line options
+
+* 13.6. "tarfile" — Read and write tar archive files
+
+  * 13.6.1. TarFile Objects
+
+  * 13.6.2. TarInfo Objects
+
+  * 13.6.3. Command-Line Interface
+
+    * 13.6.3.1. Command-line options
+
+  * 13.6.4. Examples
+
+  * 13.6.5. Supported tar formats
+
+  * 13.6.6. Unicode issues

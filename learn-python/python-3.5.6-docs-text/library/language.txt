@@ -1,0 +1,84 @@
+32. Python Language Services
+****************************
+
+Python provides a number of modules to assist in working with the
+Python language.  These modules support tokenizing, parsing, syntax
+analysis, bytecode disassembly, and various other facilities.
+
+These modules include:
+
+* 32.1. "parser" — Access Python parse trees
+
+  * 32.1.1. Creating ST Objects
+
+  * 32.1.2. Converting ST Objects
+
+  * 32.1.3. Queries on ST Objects
+
+  * 32.1.4. Exceptions and Error Handling
+
+  * 32.1.5. ST Objects
+
+  * 32.1.6. Example: Emulation of "compile()"
+
+* 32.2. "ast" — Abstract Syntax Trees
+
+  * 32.2.1. Node classes
+
+  * 32.2.2. Abstract Grammar
+
+  * 32.2.3. "ast" Helpers
+
+* 32.3. "symtable" — Access to the compiler’s symbol tables
+
+  * 32.3.1. Generating Symbol Tables
+
+  * 32.3.2. Examining Symbol Tables
+
+* 32.4. "symbol" — Constants used with Python parse trees
+
+* 32.5. "token" — Constants used with Python parse trees
+
+* 32.6. "keyword" — Testing for Python keywords
+
+* 32.7. "tokenize" — Tokenizer for Python source
+
+  * 32.7.1. Tokenizing Input
+
+  * 32.7.2. Command-Line Usage
+
+  * 32.7.3. Examples
+
+* 32.8. "tabnanny" — Detection of ambiguous indentation
+
+* 32.9. "pyclbr" — Python class browser support
+
+  * 32.9.1. Class Objects
+
+  * 32.9.2. Function Objects
+
+* 32.10. "py_compile" — Compile Python source files
+
+* 32.11. "compileall" — Byte-compile Python libraries
+
+  * 32.11.1. Command-line use
+
+  * 32.11.2. Public functions
+
+* 32.12. "dis" — Disassembler for Python bytecode
+
+  * 32.12.1. Bytecode analysis
+
+  * 32.12.2. Analysis functions
+
+  * 32.12.3. Python Bytecode Instructions
+
+  * 32.12.4. Opcode collections
+
+* 32.13. "pickletools" — Tools for pickle developers
+
+  * 32.13.1. Command line usage
+
+    * 32.13.1.1. Command line options
+
+  * 32.13.2. Programmatic Interface

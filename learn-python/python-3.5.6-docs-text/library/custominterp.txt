@@ -1,0 +1,19 @@
+30. Custom Python Interpreters
+******************************
+
+The modules described in this chapter allow writing interfaces similar
+to Python’s interactive interpreter.  If you want a Python interpreter
+that supports some special feature in addition to the Python language,
+you should look at the "code" module.  (The "codeop" module is lower-
+level, used to support compiling a possibly-incomplete chunk of Python
+code.)
+
+The full list of modules described in this chapter is:
+
+* 30.1. "code" — Interpreter base classes
+
+  * 30.1.1. Interactive Interpreter Objects
+
+  * 30.1.2. Interactive Console Objects
+
+* 30.2. "codeop" — Compile Python code

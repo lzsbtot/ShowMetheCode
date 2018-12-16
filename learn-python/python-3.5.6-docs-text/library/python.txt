@@ -1,0 +1,119 @@
+29. Python Runtime Services
+***************************
+
+The modules described in this chapter provide a wide range of services
+related to the Python interpreter and its interaction with its
+environment.  Here’s an overview:
+
+* 29.1. "sys" — System-specific parameters and functions
+
+* 29.2. "sysconfig" — Provide access to Python’s configuration
+  information
+
+  * 29.2.1. Configuration variables
+
+  * 29.2.2. Installation paths
+
+  * 29.2.3. Other functions
+
+  * 29.2.4. Using "sysconfig" as a script
+
+* 29.3. "builtins" — Built-in objects
+
+* 29.4. "__main__" — Top-level script environment
+
+* 29.5. "warnings" — Warning control
+
+  * 29.5.1. Warning Categories
+
+  * 29.5.2. The Warnings Filter
+
+    * 29.5.2.1. Default Warning Filters
+
+  * 29.5.3. Temporarily Suppressing Warnings
+
+  * 29.5.4. Testing Warnings
+
+  * 29.5.5. Updating Code For New Versions of Python
+
+  * 29.5.6. Available Functions
+
+  * 29.5.7. Available Context Managers
+
+* 29.6. "contextlib" — Utilities for "with"-statement contexts
+
+  * 29.6.1. Utilities
+
+  * 29.6.2. Examples and Recipes
+
+    * 29.6.2.1. Supporting a variable number of context managers
+
+    * 29.6.2.2. Simplifying support for single optional context
+      managers
+
+    * 29.6.2.3. Catching exceptions from "__enter__" methods
+
+    * 29.6.2.4. Cleaning up in an "__enter__" implementation
+
+    * 29.6.2.5. Replacing any use of "try-finally" and flag
+      variables
+
+    * 29.6.2.6. Using a context manager as a function decorator
+
+  * 29.6.3. Single use, reusable and reentrant context managers
+
+    * 29.6.3.1. Reentrant context managers
+
+    * 29.6.3.2. Reusable context managers
+
+* 29.7. "abc" — Abstract Base Classes
+
+* 29.8. "atexit" — Exit handlers
+
+  * 29.8.1. "atexit" Example
+
+* 29.9. "traceback" — Print or retrieve a stack traceback
+
+  * 29.9.1. "TracebackException" Objects
+
+  * 29.9.2. "StackSummary" Objects
+
+  * 29.9.3. "FrameSummary" Objects
+
+  * 29.9.4. Traceback Examples
+
+* 29.10. "__future__" — Future statement definitions
+
+* 29.11. "gc" — Garbage Collector interface
+
+* 29.12. "inspect" — Inspect live objects
+
+  * 29.12.1. Types and members
+
+  * 29.12.2. Retrieving source code
+
+  * 29.12.3. Introspecting callables with the Signature object
+
+  * 29.12.4. Classes and functions
+
+  * 29.12.5. The interpreter stack
+
+  * 29.12.6. Fetching attributes statically
+
+  * 29.12.7. Current State of Generators and Coroutines
+
+  * 29.12.8. Code Objects Bit Flags
+
+  * 29.12.9. Command Line Interface
+
+* 29.13. "site" — Site-specific configuration hook
+
+  * 29.13.1. Readline configuration
+
+  * 29.13.2. Module contents
+
+* 29.14. "fpectl" — Floating point exception control
+
+  * 29.14.1. Example
+
+  * 29.14.2. Limitations and other considerations

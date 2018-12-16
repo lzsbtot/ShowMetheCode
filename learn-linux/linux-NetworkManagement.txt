@@ -2,8 +2,13 @@ nmtui:
 
 ifconfig:
 
+ip：
+
 route:
 
 ping:
 
 traceroute:
+
+iface
+
