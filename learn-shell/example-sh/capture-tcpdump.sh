@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##########################################################################
-# This script can be used to take tcpdumps in all PLs of a vCSCF/vMTAS.
+# This script can be used to take tcpdumps in all PLs of a vMTAS.
 # Please do not use it in commerical environment!
 # Author: EFJKMNT 
 # email: roy.liu@ericsson.com
@@ -20,7 +20,7 @@ else
     # exit 1;
 fi
 
-CAPDIR=/cluster/tmp
+CAPDIR="/cluster/tmp"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
 PLBLADES=`cat /etc/cluster/nodes/payload/*/hostname`
 EVIPXML="/storage/system/config/evip-apr9010467/evip.xml"
@@ -38,6 +38,19 @@ else
     echo "Error: $EVIPXML is not existing! Check the evip.xml directory first!"
     exit 1;
 fi
+
+
+# function check_pl_status {
+#     for blade in $PLBLADES
+#     do
+#         ssh $blade "exit" > /dev/null 2>&1
+#         if [ $? -ne 0]
+#         then
+#             echo "${blade} is not reachable now!"
+#         fi
+#     done
+# }
+
 
 function get_host {
 # get traffic IPs to prepare tcpdump filter
@@ -66,8 +79,8 @@ function start_tcpdump {
     echo
     for blade in $PLBLADES
     do
-        ssh $blade "tcpdump -i any host $TCPDUMP_HOST -w ${CAPDIR}/${TC}-${DATETIME}-${blade}.pcap" >& /dev/null &
-        echo "tcpdump is running on ${blade}"
+        ssh $blade "tcpdump -i any host ${TCPDUMP_HOST} -w ${CAPDIR}/${TC}-${DATETIME}-${blade}.pcap" >& /dev/null &
+        echo "tcpdump is running on ${blade} now"
     done
     echo
     return 0
