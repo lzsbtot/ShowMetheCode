@@ -1,34 +1,42 @@
 #!/bin/bash
 
 ##########################################################################
-# This script can be used to take tcpdumps in all PLs of a vCSCF/vMTAS.
+# This script can be used to take tcpdumps in all PLs of a vMTAS vnf.
 # Please do not use it in commerical environment!
 # Author: EFJKMNT 
-# email: roy.liu@ericsson.com
 ##########################################################################
 
-if  [ $# -eq 1 ]
+
+if  [ $# -eq 2 ]
 then
     TC="$1"
+    OPTION="$2"
 else
-    TC="default-testcase"
+    echo "Usage: "
     echo
-    echo "Using default test case name: default-testcase "
-    echo "Please provide testcase-name as input parameter next time!"
-    echo "For example: ./capture-tcpdump.sh Testcase-1-1-1"
+    echo "take tcpdump on evip-fee: ./<scripts-name> <test-case-name> -f"
+    echo "take tcpdump on application: ./<scripts-name> <test-case-name> -a"
     echo
-    # exit 1;
+    exit 1;
 fi
 
-CAPDIR=/cluster/tmp
+################### log funciton tbd ####################
+# function logMsg()
+# {
+#     logger -t $SYSLOG_TAG $1 -f ${LOG_FILE}
+#     echo $1
+# }
+
+DIR="/cluster/tmp/${TC}"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
 PLBLADES=`cat /etc/cluster/nodes/payload/*/hostname`
 EVIPXML="/storage/system/config/evip-apr9010467/evip.xml"
 
-if [ ! -d $CAPDIR ]
+
+if [ ! -d $DIR ]
 then
-    echo "Directory: $CAPDIR is not existing, Create it now!"
-    mkdir -p $CAPDIR
+    echo "Directory: $DIR is not existing, Create it now!"
+    mkdir -p $DIR
 fi
 
 if [ -f $EVIPXML ]
@@ -36,10 +44,42 @@ then
     TRAFFICIP=`cat $EVIPXML | grep "vip address" | awk -F "[\"\"]" '{print $2}'`
 else
     echo "Error: $EVIPXML is not existing! Check the evip.xml directory first!"
-    exit 1;
+    exit 2;
 fi
 
-function get_host {
+
+function check-pl-status {
+# check if all PLs are reachable from SC-MIP
+    echo "checking if all PLs are reachable"
+    for blade in $PLBLADES
+    do
+        ssh $blade "exit" > /dev/null
+        if [ $? -ne 0]
+        then
+            echo "${blade} is not reachable now! tcpdump will be taken from other PLs"
+            echo "Please check if ${blade} status is expected"
+        else
+            echo "${blade} is not reachable"
+        fi
+    done
+}
+
+function check-tcpdump-status {
+# check if there's on going tcpdump
+    for blade in $PLBLADES
+    do
+        RES=`ssh $blade "ps -ef | grep tcpdump | grep -v grep"`
+        if [ $RES -ne 0]
+        then
+            echo "There's tcpdump running on ${blade} now!"
+            echo "Stop the running tcpdump and try again!"
+            exit 3;
+        fi
+    done
+}
+
+
+function get-host {
 # get traffic IPs to prepare tcpdump filter
     TCPDUMP_HOST=""
     for ip in $TRAFFICIP
@@ -55,7 +95,7 @@ function get_host {
     return 0
 }
 
-function start_tcpdump {
+function start-appl-tcpdump {
 # start tcpdump in all PLs
     echo "tcpdump filter IP:"
     for ip in $TRAFFICIP
@@ -66,39 +106,25 @@ function start_tcpdump {
     echo
     for blade in $PLBLADES
     do
-        ssh $blade "tcpdump -i any host $TCPDUMP_HOST -w ${CAPDIR}/${TC}-${DATETIME}-${blade}.pcap" >& /dev/null &
-        echo "tcpdump is running on ${blade}"
+        ssh $blade "tcpdump -i any host ${TCPDUMP_HOST} -s 0 -w ${DIR}/${DATETIME}-${blade}.pcap" >& /dev/null &
+        echo "tcpdump is running on ${blade} now"
     done
     echo
     return 0
 }
 
-function get-fee{
-# get fee NS in PL
-    ip netns list | egrep "(fee)|(FEE)"
-}
-
-function fee-tcpdump{
-# take tcpdump in fee NS in PL
-    ip netns exec $fee tcpdump -i any -w ${CAPDIR}/${TC}/${pl}-${fee}-${datetime}.pcap > /dev/null &
-}
-
-function fee-capture-all-pl{
-    for pl in $PLBLADES
-    do
-        ssh $pl "for fee in get-fee; do fee-tcpdump; done"
-    done
-}
-
-function stop_capture {
+function stop-tcpdump {
 # stop all tcpdump process in PL, might also kill tcpdump process running by someone else, be careful
-    for blade in $PLBLADES; do ssh $blade "pkill tcpdump" >& /dev/null; done
-    echo "capture stopped!"
+    for blade in $PLBLADES
+    do
+        ssh $blade "pkill tcpdump" >& /dev/null
+        echo "Tcpdump stopped on ${blade}!"
+    done
     return 0
 }
 
-get_host
-start_tcpdump
+get-host
+start-appl-tcpdump
 
 echo
 echo "Press ENTER key to stop tcpdump"
@@ -107,15 +133,30 @@ read A
 echo "Tcpdump will stop 3 seconds later!"
 sleep 3
 
-stop_capture
+stop-tcpdump
 sleep 1
 
 echo
 echo "Result Pcap Files:"
-echo $CAPDIR
-cd $CAPDIR
-for blade in $PLBLADES; do echo `ls -l ${TC}-${DATETIME}-${blade}.pcap`; done
+echo $DIR
+cd $DIR
+for blade in $PLBLADES; do echo `ls -l ${DATETIME}-${blade}.pcap`; done
 
 echo
 echo "Done!"
 exit 0
+
+######################## fee tcpdump ##################
+function start-fee-tcpdump{
+# take fee tcpdump
+    for pl in $PLBLADES
+    do
+        ssh $pl > /dev/null 2>&1 << EOF
+            for fee in `ip netns list | egrep '(fee)|(FEE)'`
+            do
+                ip netns exec ${fee} tcpdump -i any -s 0 -w ${DIR}/${pl}-${fee}-${datetime}.pcap > /dev/null &
+            done
+            exit
+EOF
+    done
+}
