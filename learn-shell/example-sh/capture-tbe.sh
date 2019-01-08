@@ -1,10 +1,73 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ##########################################################################
 # This script can be used to take tcpdumps in all PLs of a vMTAS vnf.
 # Please do not use it in commerical environment!
 # Author: EFJKMNT 
 ##########################################################################
+
+# usage="Script to take tcpdump in vmtas.
+
+# $(basename "$0") [-h] -n [test_case_name] -o [tcpdump_type] -t [transfer]
+
+# where:
+#     -h  Show this help text
+#     -n  test case name
+#     -o  tcpdump type (appl tcpdump or fee tcpdump)
+#     -t  transfer result pcap files to external server"
+
+# while getopts ':hp:s:v:n:b:' option; do
+#   case "$option" in
+#     h) echo "$usage"
+#        exit
+#        ;;
+#     p) case $OPTARG in
+#          profile1|profile2) profile=$OPTARG
+#                             (( optFlag++ ))
+#                             ;;
+#          *) printf "ERROR: Invalid argument for option -p: %s\n\n" "$OPTARG" >&2
+#             echo "$usage" >&2
+#             exit 1
+#             ;;
+#        esac
+#        ;;
+#     s) case $OPTARG in
+#          cinder|ephemeral) storage=$OPTARG
+#                            (( optFlag++ ))
+#                            ;;
+#          *) printf "ERROR: Invalid argument for option -s: %s\n\n" "$OPTARG" >&2
+#             echo "$usage" >&2
+#             exit 1
+#             ;;
+#        esac
+#        ;;
+#     v) case $OPTARG in
+#          ipv4|ipv6|dualstack) ipVersion=$OPTARG
+#                               (( optFlag++ ))
+#                               ;;
+
+#          *) printf "ERROR: Invalid argument for option -v: %s\n\n" "$OPTARG" >&2
+#             echo "$usage" >&2
+#             exit 1
+#             ;;
+#        esac
+#        ;;
+#     :) printf "ERROR: Missing argument for -%s\n" "$OPTARG" >&2
+#        echo "$usage" >&2
+#        exit 1
+#        ;;
+#    \?) printf "ERROR:  Illegal option: -%s\n" "$OPTARG" >&2
+#        echo "$usage" >&2
+#        exit 1
+#        ;;
+#   esac
+# done
+# if [ $optFlag -ne 3 ]
+# then
+#   echo "ERROR: Missing option/argument. See usage:" >&2
+#   echo "$usage" >&2
+#   exit 1
+# fi
 
 
 if  [ $# -eq 2 ]
@@ -19,13 +82,6 @@ else
     echo
     exit 1;
 fi
-
-################### log funciton tbd ####################
-# function logMsg()
-# {
-#     logger -t $SYSLOG_TAG $1 -f ${LOG_FILE}
-#     echo $1
-# }
 
 DIR="/cluster/tmp/${TC}"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
@@ -78,7 +134,6 @@ function check-tcpdump-status {
     done
 }
 
-
 function get-host {
 # get traffic IPs to prepare tcpdump filter
     TCPDUMP_HOST=""
@@ -113,6 +168,22 @@ function start-appl-tcpdump {
     return 0
 }
 
+# ######################## fee tcpdump ##################
+# function start-fee-tcpdump{
+# # take fee tcpdump
+#     for pl in $PLBLADES
+#     do
+#         ssh $pl > /dev/null 2>&1 << EOF
+#             for fee in `ip netns list | egrep '(fee)|(FEE)'`
+#             do
+#                 ip netns exec ${fee} tcpdump -i any -s 0 -w ${DIR}/${pl}-${fee}-${datetime}.pcap > /dev/null &
+#             done
+#             exit
+# EOF
+#     done
+# }
+
+
 function stop-tcpdump {
 # stop all tcpdump process in PL, might also kill tcpdump process running by someone else, be careful
     for blade in $PLBLADES
@@ -139,24 +210,10 @@ sleep 1
 echo
 echo "Result Pcap Files:"
 echo $DIR
-cd $DIR
-for blade in $PLBLADES; do echo `ls -l ${DATETIME}-${blade}.pcap`; done
+for blade in $PLBLADES; do echo `ls -l ${DIR}/${DATETIME}-${blade}.pcap`; done
 
 echo
 echo "Done!"
 exit 0
 
-######################## fee tcpdump ##################
-function start-fee-tcpdump{
-# take fee tcpdump
-    for pl in $PLBLADES
-    do
-        ssh $pl > /dev/null 2>&1 << EOF
-            for fee in `ip netns list | egrep '(fee)|(FEE)'`
-            do
-                ip netns exec ${fee} tcpdump -i any -s 0 -w ${DIR}/${pl}-${fee}-${datetime}.pcap > /dev/null &
-            done
-            exit
-EOF
-    done
-}
+
