@@ -40,7 +40,6 @@ function fee-tcpdump{
 }
 
 function stop_tcpdump {
-# stop all tcpdump process in PL, might also kill tcpdump process running by someone else, be careful
     for blade in $PLBLADES; do ssh $blade "pkill tcpdump" > /dev/null; done
     echo "fee-tcpdump stopped!"
     return 0
