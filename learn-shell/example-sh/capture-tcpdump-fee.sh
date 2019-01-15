@@ -1,11 +1,6 @@
 #!/bin/bash
 
-##########################################################################
-# This script can be used to take tcpdumps in all PLs of a vCSCF/vMTAS.
-# Please do not use it in commerical environment!
-# Author: EFJKMNT 
-# email: roy.liu@ericsson.com
-##########################################################################
+############## tbe ############
 
 if  [ $# -eq 1 ]
 then
@@ -32,7 +27,7 @@ then
 fi
 
 function get_fee{
-    ip netns list | egrep "(fee)|(FEE)"
+    ip netns list | egrep fee\|FEE
 }
 
 function fee-tcpdump{
@@ -52,13 +47,5 @@ do
     ssh $pl "for fee in get_fee; do fee-tcpdump; done"
 done
 
-echo
-echo "Press ENTER key to stop tcpdump"
-echo
-read A
-echo "Tcpdump will stop 3 seconds later!"
-sleep 3
 
-stop_tcpdump
-sleep 1
 
