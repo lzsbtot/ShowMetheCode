@@ -3,14 +3,16 @@
 if  [ $# -eq 1 ]
 then
     TC="$1"
-    echo "Taking tcpdump for test case : ${TC} "
+    echo
+    echo "****************************************************************"
+    echo
+    echo "Taking tcpdump for test case : ${TC}"
 else
     echo "Usage:"
     echo "./capture-tcpdump.sh <test-case>"
     exit 1;
 fi
 
-NODE="VNF-NODE-NAME"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
 DIR="/cluster/vmtas/${TC}"
 
@@ -59,17 +61,19 @@ function get-host {
     return 0
 }
 
-
 function check-pl-status {
     echo "Current PL list:"
     echo "${PLBLADES}"
+    echo
+    echo "****************************************************************"
+    echo
     echo "Checking if each PL blade is reachable"
     for blade in ${PLBLADES}
     do
         ssh ${blade} "exit" > /dev/null
         if [ $? -ne 0 ]
         then
-            echo "${blade} is not reachable now! "
+            echo "${blade} is not reachable now, remove it from capture list. "
             echo "Please check if ${blade} status is expected"
             PLBLADES=`echo ${PLBLADES} | sed "s/${blade}//g"`
         else
@@ -81,7 +85,7 @@ function check-pl-status {
 function start-appl-tcpdump {
     for blade in ${PLBLADES}
     do
-        RESF="${DIR}/${NODE}-${TC}-${DATETIME}-${blade}.pcap"
+        RESF="${DIR}/${TC}-${DATETIME}-${blade}.pcap"
         ssh -t -t ${blade} "tcpdump -i any host ${TCPDUMP_HOST} -s 0 -w ${RESF}" > /dev/null &
         echo "tcpdump is running on ${blade} now"
     done
@@ -100,30 +104,24 @@ function stop-tcpdump {
 
 get-host
 
-
-
 check-pl-status
-echo
-
 echo
 echo "****************************************************************"
 echo
-
 start-appl-tcpdump
-
 echo
 echo "****************************************************************"
 echo
 
 while :
 do
-    read -p "Press [q/Q] to stop capturing tcpdump:" KEY
+    read -n1 -p "Press [q/Q] to stop capturing tcpdump:" KEY
     case ${KEY} in
     q | Q)
         echo
-        echo "Tcpdump will stop 1 second later!"
-        sleep 1
+        echo "Tcpdump will stop now!"
         stop-tcpdump
+        sleep 1
         break
     ;;
     *)
@@ -136,10 +134,7 @@ done
 echo
 echo "****************************************************************"
 echo
-
-sleep 1
-echo
 echo "Result pcap files:"
-ls -l ${DIR}/${NODE}-${TC}-${DATETIME}*.pcap
+ls -l ${DIR}/${TC}-${DATETIME}*.pcap
 echo
 echo "*************************** Done! ******************************"
