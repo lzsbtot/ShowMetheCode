@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if  [ $# -eq 1 ]
 then
@@ -9,7 +9,7 @@ then
     echo "Taking tcpdump for test case : ${TC}"
 else
     echo "Usage:"
-    echo "./capture-tcpdump.sh <test-case>"
+    echo "${0} <test-case>"
     exit 1;
 fi
 
