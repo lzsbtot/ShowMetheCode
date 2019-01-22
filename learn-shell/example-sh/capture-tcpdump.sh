@@ -32,11 +32,6 @@ then
     mkdir -p ${DIR}
 fi
 
-# echo "tcpdump filter IP:"
-# for ip in ${TRAFFICIP}
-# do
-#     echo ${ip}
-# done
 
 function check-pl-status {
     echo "**********************      PL list     ************************"
