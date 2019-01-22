@@ -4,90 +4,64 @@ if  [ $# -eq 1 ]
 then
     TC="$1"
     echo
-    echo "****************************************************************"
+    echo "*************  ${TC}  *************"
     echo
-    echo "Taking tcpdump for test case : ${TC}"
 else
     echo "Usage:"
     echo "${0} <test-case>"
-    exit 1;
+    exit 0;
 fi
 
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
 DIR="/cluster/vmtas/${TC}"
-
 EVIPXML="/storage/system/config/evip-apr9010467/evip.xml"
 
 if [ -f ${EVIPXML} ]
 then
-    PLBLADES=`cat ${EVIPXML}| grep 'hostname="PL' | awk -F "[\"\"]" '{print $4}'`
-    TRAFFICIP=`cat ${EVIPXML}| grep "vip address" | awk -F "[\"\"]" '{print $2}'`
+    PL_LIST=`cat ${EVIPXML}| grep 'hostname="PL' | awk -F "[\"\"]" '{print $4}'`
+    HOST_FILTER=`cat ${EVIPXML}| grep "vip address" | awk -F "[\"\"]" '{print $2}' | sed ':a;N;s/\n/ or /;ba'`
 else
     echo "Error: ${EVIPXML} is not existing! Check the evip.xml directory first!"
-    exit 2;
+    exit 0;
 fi
 
 if [ ! -d ${DIR} ]
 then
     echo "Directory: ${DIR} is not existing, Create it now!"
+    echo
     mkdir -p ${DIR}
 fi
 
-echo
-echo "****************************************************************"
-echo
-
-echo "tcpdump filter IP:"
-for ip in ${TRAFFICIP}
-do
-    echo ${ip}
-done
-echo
-echo "****************************************************************"
-echo
-
-function get-host {
-    TCPDUMP_HOST=""
-    for ip in ${TRAFFICIP}
-    do
-        if [ -z "${TCPDUMP_HOST}" ]
-        then
-            TCPDUMP_HOST="\\(${ip}"
-        else
-            TCPDUMP_HOST="${TCPDUMP_HOST} or ${ip}"
-        fi
-    done
-    TCPDUMP_HOST="${TCPDUMP_HOST}\\)"
-    return 0
-}
+# echo "tcpdump filter IP:"
+# for ip in ${TRAFFICIP}
+# do
+#     echo ${ip}
+# done
 
 function check-pl-status {
-    echo "Current PL list:"
-    echo "${PLBLADES}"
+    echo "**********************      PL list     ************************"
+    echo "${PL_LIST}"
     echo
-    echo "****************************************************************"
-    echo
-    echo "Checking if each PL blade is reachable"
-    for blade in ${PLBLADES}
+    echo "********************** Check PL status  ************************"
+    for pl in ${PL_LIST}
     do
-        ssh ${blade} "exit" > /dev/null
+        ssh ${pl} "exit" > /dev/null
         if [ $? -ne 0 ]
         then
-            echo "${blade} is not reachable now, remove it from capture list. "
-            echo "Please check if ${blade} status is expected"
-            PLBLADES=`echo ${PLBLADES} | sed "s/${blade}//g"`
+            echo "${pl} is not reachable now, remove it from capture list. "
+            PL_LIST=`echo ${PL_LIST} | sed "s/${pl}//g"`
         else
-            echo "${blade} ------------reachable"
+            echo "${pl} ------------reachable"
         fi
     done
 }
 
 function start-appl-tcpdump {
-    for blade in ${PLBLADES}
+    for pl in ${PL_LIST}
     do
-        RESF="${DIR}/${TC}-${DATETIME}-${blade}.pcap"
-        ssh -t -t ${blade} "tcpdump -i any host ${TCPDUMP_HOST} -s 0 -w ${RESF}" > /dev/null &
-        echo "tcpdump is running on ${blade} now"
+        RESF="${DIR}/${TC}-${DATETIME}-${pl}.pcap"
+        ssh -t -t ${pl} "tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF}" > /dev/null &
+        echo "tcpdump is running on ${pl} now"
     done
     return 0
 }
@@ -102,12 +76,9 @@ function stop-tcpdump {
 }
 
 
-get-host
-
 check-pl-status
 echo
-echo "****************************************************************"
-echo
+echo "********************** start capturing *************************"
 start-appl-tcpdump
 echo
 echo "****************************************************************"
@@ -138,3 +109,4 @@ echo "Result pcap files:"
 ls -l ${DIR}/${TC}-${DATETIME}*.pcap
 echo
 echo "*************************** Done! ******************************"
+exit 0

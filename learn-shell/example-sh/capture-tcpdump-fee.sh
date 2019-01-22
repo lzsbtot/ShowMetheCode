@@ -1,51 +1,124 @@
-#!/bin/bash
-
-############## tbe ############
+#!/usr/bin/env bash
+#tbe
 
 if  [ $# -eq 1 ]
 then
     TC="$1"
+    echo
+    echo "*************  ${TC}  *************"
+    echo
 else
-    TC="default-testcase"
-    echo
-    echo "Using default test case name: default-testcase "
-    echo "Please provide testcase-name as input parameter next time!"
-    echo "For example: ./capture-tcpdump.sh Testcase-1-1-1"
-    echo
-    # exit 1;
+    echo "Usage:"
+    echo "${0} <test-case>"
+    exit 1;
 fi
 
-CAPDIR=/cluster/tmp
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
-PLBLADES=`cat /etc/cluster/nodes/payload/*/hostname`
-# EVIPXML=/storage/system/config/evip-apr9010467/evip.xml
+DIR="/cluster/vmtas/${TC}"
+EVIPXML=/storage/system/config/evip-apr9010467/evip.xml
+declare -A map=()
 
-if [ ! -d $CAPDIR ]
+if [ -f ${EVIPXML} ]
 then
-    echo "Directory: $CAPDIR is not existing, Create it now!"
-    mkdir -p $CAPDIR
+    PL_LIST=`cat ${EVIPXML} | grep "<fee " | awk -F "[\"\"]" '{print $2}' | sort -u | sed "s/^/PL-/g"`
+else
+    echo "Error: ${EVIPXML} is not existing! Check the evip.xml directory first!"
+    exit 2;
 fi
 
-function get_fee{
-    ip netns list | egrep fee\|FEE
+if [ ! -d ${DIR} ]
+then
+    echo "Directory: ${DIR} is not existing, Create it now!"
+    mkdir -p ${DIR}
+fi
+
+echo
+echo "****************************************************************"
+echo
+
+function check-pl-status {
+    echo "**********************      PL list     ************************"
+    echo "${PL_LIST}"
+    echo
+    echo "********************** Check PL status  ************************"
+    for pl in ${PL_LIST}
+    do
+        ssh ${pl} "exit" > /dev/null
+        if [ $? -ne 0 ]
+        then
+            echo "${pl} is not reachable now, remove it from capture list. "
+            PL_LIST=`echo ${PL_LIST} | sed "s/${pl}//g"`
+        else
+            echo "${pl} ------------reachable"
+        fi
+    done
 }
 
-function fee-tcpdump{
-    ip netns exec $fee tcpdump -i any -w ${CAPDIR}/${TC}/${pl}-${fee}-${datetime}.pcap > /dev/null &
+function fetch-fee-info {
+    for pl in ${PL_LIST}
+    do
+        FEE_LIST=`ssh ${pl} ip netns list | grep fee`
+        echo "***************** fee running on ${pl}  ********************"
+        for fee in ${FEE_LIST}; do echo ${fee}; done
+        echo
+        map["${pl}"]="${FEE_LIST}"
+    done
 }
 
-function stop_tcpdump {
-    for blade in $PLBLADES; do ssh $blade "pkill tcpdump" > /dev/null; done
-    echo "fee-tcpdump stopped!"
+function start-fee-tcpdump {
+    for pl in ${PL_LIST}
+    do
+        for fee in ${map["${pl}"]}
+        do
+            RESF="${DIR}/${TC}-${DATETIME}-${pl}-${fee}.pcap"
+            ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i any -s 0 -w ${RESF}" > /dev/null &
+            echo "tcpdump is running on ${pl}-${fee} now"
+        done
+    done 
     return 0
 }
 
-mkdir $CAPDIR/${TC}
+function stop-tcpdump {
+    PIDS=`ps -ef | grep "${TC}-${DATETIME}" | grep -v grep | awk '{print $2}'`
+    for pid in ${PIDS}
+    do
+        kill -9 ${pid}
+    done
+    return 0
+}
 
-for pl in $PLBLADES
+check-pl-status
+echo
+fetch-fee-info
+echo
+echo "********************** start capturing *************************"
+start-fee-tcpdump
+echo
+echo "****************************************************************"
+echo
+
+while :
 do
-    ssh $pl "for fee in get_fee; do fee-tcpdump; done"
+    read -n1 -p "Press [q/Q] to stop capturing tcpdump:" KEY
+    case ${KEY} in
+    q | Q)
+        echo
+        echo "Tcpdump will stop now!"
+        stop-tcpdump
+        sleep 1
+        break
+    ;;
+    *)
+        echo
+        continue
+    ;;
+    esac
 done
 
-
-
+echo
+echo "****************************************************************"
+echo
+echo "Result pcap files:"
+ls -l ${DIR}/*${DATETIME}*.pcap
+echo
+echo "*************************** Done! ******************************"
