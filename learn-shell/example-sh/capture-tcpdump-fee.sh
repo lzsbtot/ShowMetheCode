@@ -49,7 +49,7 @@ function check-pl-status {
             echo "${pl} is not reachable now, remove it from capture list. "
             PL_LIST=`echo ${PL_LIST} | sed "s/${pl}//g"`
         else
-            echo "${pl} ------------reachable"
+            echo "${pl} ------------  OK"
         fi
     done
 }
