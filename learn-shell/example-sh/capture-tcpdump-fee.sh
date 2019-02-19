@@ -70,9 +70,11 @@ function start-fee-tcpdump {
     do
         for fee in ${map["${pl}"]}
         do
-            RESF="${DIR}/${TC}-${DATETIME}-${pl}-${fee}.pcap"
-            ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i any -s 0 -w ${RESF}" > /dev/null &
-            echo "tcpdump is running on ${pl}-${fee} now"
+            RESF="${DIR}/${TC}-${DATETIME}-${OPTION}-${pl}-${fee}.pcap"
+            INTERFACE=`ssh ${pl} ip netns exec ${fee} ifconfig | grep eth | awk '{print $1}'`
+            ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF}" > /dev/null &
+            echo "fee tcpdump is running on ${pl} ${fee} now"
+            echo
         done
     done 
     return 0
