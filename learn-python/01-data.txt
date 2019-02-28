@@ -1,4 +1,12 @@
 Python 有6种数据类型：
+
+number
+string
+list
+tuple
+set
+dict
+
 1. number
     1.1 /
         除法运算， int/int会得到float.
@@ -44,3 +52,5 @@ Python 有6种数据类型：
         str.title()
         str.upper()
         str.len()
+
+3. list
