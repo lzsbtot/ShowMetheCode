@@ -1,0 +1,38 @@
+1. if:
+    >>> x = int(input("Please enter an integer: "))
+    Please enter an integer: 42
+    >>> if x < 0:
+    ...      x = 0
+    ...      print('Negative changed to zero')
+    ... elif x == 0:
+    ...      print('Zero')
+    ... elif x == 1:
+    ...      print('Single')
+    ... else:
+    ...      print('More')
+
+2. for:
+    >>> words = ['cat', 'window', 'defenestrate']
+    >>> for w in words:
+    ...     print(w, len(w))
+
+3. range:
+    >>> for i in range(5):
+    ...     print(i)
+    ...
+    0
+    1
+    2
+    3
+    4
+
+4. pass:
+    do nothing
+
+5. in/is
+
+6. and/or
+
+7. not
+    A and not B or C == (A and (notB)) or C
+
