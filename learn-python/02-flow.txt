@@ -26,6 +26,11 @@
     3
     4
 
+       >>> print(range(10))
+        range(0, 10)
+
+
+
 4. pass:
     do nothing
 

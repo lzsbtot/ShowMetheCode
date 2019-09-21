@@ -42,17 +42,12 @@ echo
 echo "Take ${OPTION} tcpdump for test case : ${TC}"
 echo
 
-DIR="/cluster/vmtas/${TC}"
+DIR="/var/tmp/capture/${TC}"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
-EVIPXML="/storage/system/config/evip-apr9010467/evip.xml"
+PL_LIST=`cluster config -p | grep "payload PL" | awk '{print $4}'`
+HOST_FILTER=`cluster config -p | grep "host all" | awk '{print $3}' | sed ':a;N;s/\n/ or /;ba'`
+
 declare -A map=()
-
-
-if [ ! -f ${EVIPXML} ]
-then
-    echo "Error: ${EVIPXML} is not existing! Check the evip.xml directory first!"
-    exit 0
-fi
 
 if [ ! -d ${DIR} ]
 then
@@ -82,16 +77,18 @@ function check-pl-status {
 function fetch-fee-info {
     for pl in ${PL_LIST}
     do
-        FEE_LIST=`ssh ${pl} ip netns list | grep fee`
-        echo "***************** fee running on ${pl}  ********************"
-        for fee in ${FEE_LIST}; do echo ${fee}; done
-        echo
-        map["${pl}"]="${FEE_LIST}"
+        FEE_LIST=`ssh ${pl} ip netns list | grep -i fee`
+        if [ -n ${FEE_LIST} ]
+        then
+            echo "***************** fee running on ${pl}  ********************"
+            for fee in ${FEE_LIST}; do echo ${fee}; done
+            echo
+            map["${pl}"]="${FEE_LIST}"
+        fi
     done
 }
 
 function start-appl-tcpdump {
-    HOST_FILTER=`cat ${EVIPXML}| grep "vip address" | awk -F "[\"\"]" '{print $2}' | sed ':a;N;s/\n/ or /;ba'`
     echo "*****************    start capturing now    ********************"
     for pl in ${PL_LIST}
     do
@@ -104,7 +101,7 @@ function start-appl-tcpdump {
 
 function start-fee-tcpdump {
     echo "*****************    start capturing now    ********************"
-    for pl in ${PL_LIST}
+    for pl in ${!map["${pl}"]}
     do
         for fee in ${map["${pl}"]}
         do
@@ -120,21 +117,25 @@ function start-fee-tcpdump {
 
 function stop-tcpdump {
     PIDS=`ps -ef | grep "${TC}-${DATETIME}-${OPTION}" | grep -v grep | awk '{print $2}'`
-    for pid in ${PIDS}
-    do
-        kill -9 ${pid}
-    done
-    return 0
+    if [ -n ${PIDS} ]
+    then
+        for pid in ${PIDS}
+        do
+            kill -9 ${pid}
+        done
+        return 0
+    else
+        echo "Error: PID not found!"
+        exit 0
+    fi
 }
 
 case ${OPTION} in
 appl)
-    PL_LIST=`cat ${EVIPXML}| grep 'hostname="PL' | awk -F "[\"\"]" '{print $4}'`
     check-pl-status
     start-appl-tcpdump
     ;;
 fee)
-    PL_LIST=`cat ${EVIPXML} | grep "<fee " | awk -F "[\"\"]" '{print $2}' | sort -u | sed "s/^/PL-/g"`
     check-pl-status
     fetch-fee-info
     start-fee-tcpdump
