@@ -4,42 +4,95 @@
 ####   Script to take tcpdump on vmtas, Do NOT use it in commerical environment!    ###
 #######################################################################################
 
-function usage {
-    echo "Usage:"
-    echo "${0} <test-case> [-f|h]"
-    echo "    take application level tcpdump by default, without any option parameter"
-    echo "    -f | --fee  : take evip fee level tcpdump"
-    echo "    -h | --help : help"
-}
+usage="Script to capture the vMTAS tcpdump.
 
+$(basename "$0") [-h] -t [test_case] -c [capture_type]
 
-if  [ $# -eq 2 ]
+where:
+    -h  Show this help text
+    -t  test case name
+    -c  capture type: application level tcpdump(appl) or fee tcpdump(fee)
+
+optFlag=0
+while getopts ':ht:c:' option; do
+  case "$option" in
+    h) echo "$usage"
+       exit
+       ;;
+    t) if [ -n $OPTARG ]
+       then
+           TC=$OPTARG
+           (( optFlag++ ))
+       else
+           printf "ERROR: test_case name can not be empty!" >&2
+           echo "$usage" >&2
+           exit 1
+       fi
+       ;;
+    c) case $OPTARG in
+         appl|fee) capture_type=$OPTARG
+                            (( optFlag++ ))
+                            ;;
+         *) printf "ERROR: Invalid argument for option -p: %s\n\n" "$OPTARG" >&2
+            echo "$usage" >&2
+            exit 1
+            ;;
+       esac
+       ;;
+    :) printf "ERROR: Missing argument for -%s\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+   \?) printf "ERROR:  Illegal option: -%s\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+  esac
+done
+if [ $optFlag -ne 2 ]
 then
-    TC="${1}"
-    case ${2} in
-    -h | --help)
-        usage
-        ;;
-    -f | --fee)
-        OPTION="fee"
-        ;;
-    *)
-        echo "Error: invalid option ${2}"
-        usage
-        exit 0
-        ;;
-    esac
-elif [ $# -eq 1 ]
-then
-    TC="${1}"
-    OPTION="appl"
-else
-    usage
-    exit 0
+  echo "ERROR: Missing option/argument. See usage:" >&2
+  echo "$usage" >&2
+  exit 1
 fi
 
+
+# function usage {
+#     echo "Usage:"
+#     echo "${0} <test-case> [-f|h]"
+#     echo "    take application level tcpdump by default, without any option parameter"
+#     echo "    -f | --fee  : take evip fee level tcpdump"
+#     echo "    -h | --help : help"
+# }
+
+
+# if  [ $# -eq 2 ]
+# then
+#     TC="${1}"
+#     case ${2} in
+#     -h | --help)
+#         usage
+#         ;;
+#     -f | --fee)
+#         capture_type="fee"
+#         ;;
+#     *)
+#         echo "Error: invalid option ${2}"
+#         usage
+#         exit 0
+#         ;;
+#     esac
+# elif [ $# -eq 1 ]
+# then
+#     TC="${1}"
+#     capture_type="appl"
+# else
+#     usage
+#     exit 0
+# fi
+
 echo
-echo "Take ${OPTION} tcpdump for test case : ${TC}"
+echo "Take ${capture_type} tcpdump for test case : ${TC}"
 echo
 
 DIR="/var/tmp/capture/${TC}"
@@ -92,9 +145,9 @@ function start-appl-tcpdump {
     echo "*****************    start capturing now    ********************"
     for pl in ${PL_LIST}
     do
-        RESF="${DIR}/${TC}-${DATETIME}-${OPTION}-${pl}.pcap"
+        RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}.pcap"
         ssh -t -t ${pl} "tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF}" > /dev/null &
-        echo "${OPTION} tcpdump is running on ${pl} now"
+        echo "${capture_type} tcpdump is running on ${pl} now"
     done
     return 0
 }
@@ -105,10 +158,10 @@ function start-fee-tcpdump {
     do
         for fee in ${map["${pl}"]}
         do
-            RESF="${DIR}/${TC}-${DATETIME}-${OPTION}-${pl}-${fee}.pcap"
+            RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}-${fee}.pcap"
             INTERFACE=`ssh ${pl} ip netns exec ${fee} ifconfig | grep eth | awk '{print $1}'`
             ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF}" > /dev/null &
-            echo "${OPTION} tcpdump is running on ${pl} ${fee} now"
+            echo "${capture_type} tcpdump is running on ${pl} ${fee} now"
             echo
         done
     done 
@@ -116,7 +169,7 @@ function start-fee-tcpdump {
 }
 
 function stop-tcpdump {
-    PIDS=`ps -ef | grep "${TC}-${DATETIME}-${OPTION}" | grep -v grep | awk '{print $2}'`
+    PIDS=`ps -ef | grep "${TC}-${DATETIME}-${capture_type}" | grep -v grep | awk '{print $2}'`
     if [ -n ${PIDS} ]
     then
         for pid in ${PIDS}
@@ -130,7 +183,7 @@ function stop-tcpdump {
     fi
 }
 
-case ${OPTION} in
+case ${capture_type} in
 appl)
     check-pl-status
     start-appl-tcpdump
@@ -173,7 +226,7 @@ echo
 echo "****************************************************************"
 echo
 echo "Result pcap files:"
-ls -l ${DIR}/${TC}-${DATETIME}-${OPTION}*.pcap
+ls -l ${DIR}/${TC}-${DATETIME}-${capture_type}*.pcap
 echo
 echo "*************************** Done! ******************************"
 exit 0
