@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 
-#######################################################################################
-####   Script to take tcpdump on vmtas, Do NOT use it in commerical environment!    ###
-#######################################################################################
-
-usage="Script to capture the vMTAS tcpdump.
+usage="Script to capture the tcpdump.
 
 $(basename "$0") [-h] -t [test_case] -c [capture_type]
 
 where:
     -h  Show this help text
     -t  test case name
-    -c  capture type: application level tcpdump(appl) or fee tcpdump(fee)
+    -c  capture type: application level tcpdump(appl) or fee tcpdump(fee)"
 
 optFlag=0
 while getopts ':ht:c:' option; do
@@ -56,41 +52,6 @@ then
   exit 1
 fi
 
-
-# function usage {
-#     echo "Usage:"
-#     echo "${0} <test-case> [-f|h]"
-#     echo "    take application level tcpdump by default, without any option parameter"
-#     echo "    -f | --fee  : take evip fee level tcpdump"
-#     echo "    -h | --help : help"
-# }
-
-
-# if  [ $# -eq 2 ]
-# then
-#     TC="${1}"
-#     case ${2} in
-#     -h | --help)
-#         usage
-#         ;;
-#     -f | --fee)
-#         capture_type="fee"
-#         ;;
-#     *)
-#         echo "Error: invalid option ${2}"
-#         usage
-#         exit 0
-#         ;;
-#     esac
-# elif [ $# -eq 1 ]
-# then
-#     TC="${1}"
-#     capture_type="appl"
-# else
-#     usage
-#     exit 0
-# fi
-
 echo
 echo "Take ${capture_type} tcpdump for test case : ${TC}"
 echo
@@ -108,30 +69,12 @@ then
     mkdir -p ${DIR}
 fi
 
-function check-pl-status {
-    echo "**********************      PL list     ************************"
-    echo "${PL_LIST}"
-    echo
-    echo "********************   Check PL status    **********************"
-    for pl in ${PL_LIST}
-    do
-        ssh ${pl} "exit" > /dev/null
-        if [ $? -ne 0 ]
-        then
-            echo "${pl} is not reachable now, remove it from capture list. "
-            PL_LIST=`echo ${PL_LIST} | sed "s/${pl}//g"`
-        else
-            echo "${pl} ------------  OK"
-        fi
-    done
-    echo
-}
-
 function fetch-fee-info {
     for pl in ${PL_LIST}
     do
         FEE_LIST=`ssh ${pl} ip netns list | grep -i fee`
-        if [ -n ${FEE_LIST} ]
+        echo ${FEE_LIST}
+        if [ ${FEE_LIST} ]
         then
             echo "***************** fee running on ${pl}  ********************"
             for fee in ${FEE_LIST}; do echo ${fee}; done
@@ -146,7 +89,7 @@ function start-appl-tcpdump {
     for pl in ${PL_LIST}
     do
         RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}.pcap"
-        ssh -t -t ${pl} "tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF}" > /dev/null &
+        ssh -t ${pl} "tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF}" > /dev/null &
         echo "${capture_type} tcpdump is running on ${pl} now"
     done
     return 0
@@ -160,7 +103,7 @@ function start-fee-tcpdump {
         do
             RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}-${fee}.pcap"
             INTERFACE=`ssh ${pl} ip netns exec ${fee} ifconfig | grep eth | awk '{print $1}'`
-            ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF}" > /dev/null &
+            ssh -t ${pl} "ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF}" > /dev/null &
             echo "${capture_type} tcpdump is running on ${pl} ${fee} now"
             echo
         done
@@ -185,18 +128,15 @@ function stop-tcpdump {
 
 case ${capture_type} in
 appl)
-    check-pl-status
     start-appl-tcpdump
     ;;
 fee)
-    check-pl-status
     fetch-fee-info
     start-fee-tcpdump
     ;;
 *)
-    echo "Error: Invalid capture option!"
-    usage
-    exit 0
+    echo "$usage" >&2
+    exit 1
     ;;
 esac
 
