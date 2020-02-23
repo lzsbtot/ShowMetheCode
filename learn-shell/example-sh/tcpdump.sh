@@ -2,12 +2,12 @@
 
 usage="Script to capture the tcpdump.
 
-$(basename "$0") [-h] -t [test_case] -c [capture_type]
+$(basename "$0") [-h] -c [CASE] -t [TYPE]
 
 where:
     -h  Show this help text
-    -t  test case name
-    -c  capture type: application level tcpdump(appl) or fee tcpdump(fee)"
+    -c  test case name
+    -t  capture type: application level tcpdump(appl) or fee tcpdump(fee)"
 
 optFlag=0
 while getopts ':ht:c:' option; do
@@ -15,18 +15,18 @@ while getopts ':ht:c:' option; do
     h) echo "$usage"
        exit
        ;;
-    t) if [ -n $OPTARG ]
+    c) if [ -n $OPTARG ]
        then
            TC=$OPTARG
            (( optFlag++ ))
        else
-           printf "ERROR: test_case name can not be empty!" >&2
+           printf "ERROR: CASE name can not be empty!" >&2
            echo "$usage" >&2
            exit 1
        fi
        ;;
-    c) case $OPTARG in
-         appl|fee) capture_type=$OPTARG
+    t) case $OPTARG in
+         appl|fee) TYPE=$OPTARG
                             (( optFlag++ ))
                             ;;
          *) printf "ERROR: Invalid argument for option -p: %s\n\n" "$OPTARG" >&2
@@ -53,10 +53,10 @@ then
 fi
 
 echo
-echo "Take ${capture_type} tcpdump for test case : ${TC}"
+echo "Take ${TYPE} tcpdump for test case : ${TC}"
 echo
 
-DIR="/var/tmp/capture/${TC}"
+DIR="/cluster/storage/capture/${TC}"
 DATETIME=`date +"%Y%m%d-T%H%M%S"`
 PL_LIST=`cluster config -p | grep "payload PL" | awk '{print $4}'`
 HOST_FILTER=`cluster config -p | grep "host all" | awk '{print $3}' | sed ':a;N;s/\n/ or /;ba'`
@@ -73,7 +73,6 @@ function fetch-fee-info {
     for pl in ${PL_LIST}
     do
         FEE_LIST=`ssh ${pl} ip netns list | grep -i fee`
-        echo ${FEE_LIST}
         if [ "${FEE_LIST}" ]
         then
             echo "***************** fee running on ${pl}  ********************"
@@ -88,11 +87,10 @@ function start-appl-tcpdump {
     echo "*****************    start capturing now    ********************"
     for pl in ${PL_LIST}
     do
-        RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}.pcap"
-        ssh -t -t ${pl} tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF} > /dev/null &
-        echo "${capture_type} tcpdump is running on ${pl} now"
+        RESF="${DIR}/${DATETIME}-${TC}-${TYPE}-${pl}.pcap"
+        ssh -t -t -f ${pl} tcpdump -i any host ${HOST_FILTER} -s 0 -w ${RESF} < /dev/null > /dev/null 2>&1
+        echo "${TYPE} tcpdump is running on ${pl} now"
     done
-    return 0
 }
 
 function start-fee-tcpdump {
@@ -101,32 +99,30 @@ function start-fee-tcpdump {
     do
         for fee in ${map["${pl}"]}
         do
-            RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}-${fee}.pcap"
+            RESF="${DIR}/${DATETIME}-${TC}-${TYPE}-${pl}-${fee}.pcap"
             INTERFACE=`ssh ${pl} ip netns exec ${fee} ifconfig | grep eth | awk '{print $1}'`
-            ssh -t -t ${pl} ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF} > /dev/null &
-            echo "${capture_type} tcpdump is running on ${pl} ${fee} now"
+            ssh -t -t -f ${pl} ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF} < /dev/null > /dev/null 2>&1
+            echo "${TYPE} tcpdump is running on ${pl} ${fee} now"
             echo
         done
     done 
-    return 0
 }
 
 function stop-tcpdump {
-    PIDS=`ps -ef | grep "${TC}-${DATETIME}-${capture_type}" | grep -v grep | awk '{print $2}'`
-    if [ -n ${PIDS} ]
+    PIDS=`ps -ef | grep "${DATETIME}-${TC}-${TYPE}" | grep -v grep | awk '{print $2}'`
+    if [ "${PIDS}" ]
     then
         for pid in ${PIDS}
         do
             kill -9 ${pid}
         done
-        return 0
     else
         echo "Error: PID not found!"
         exit 0
     fi
 }
 
-case ${capture_type} in
+case ${TYPE} in
 appl)
     start-appl-tcpdump
     ;;
@@ -166,7 +162,7 @@ echo
 echo "****************************************************************"
 echo
 echo "Result pcap files:"
-ls -l ${DIR}/${TC}-${DATETIME}-${capture_type}*.pcap
+ls -l ${DIR}/${TC}-${DATETIME}-${TYPE}*.pcap
 echo
 echo "*************************** Done! ******************************"
 exit 0
