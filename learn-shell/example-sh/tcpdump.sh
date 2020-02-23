@@ -89,7 +89,7 @@ function start-appl-tcpdump {
     for pl in ${PL_LIST}
     do
         RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}.pcap"
-        ssh -t -t ${pl} "tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF}" > /dev/null &
+        ssh -t -t ${pl} tcpdump -i any host \\(${HOST_FILTER}\\) -s 0 -w ${RESF} > /dev/null &
         echo "${capture_type} tcpdump is running on ${pl} now"
     done
     return 0
@@ -103,7 +103,7 @@ function start-fee-tcpdump {
         do
             RESF="${DIR}/${TC}-${DATETIME}-${capture_type}-${pl}-${fee}.pcap"
             INTERFACE=`ssh ${pl} ip netns exec ${fee} ifconfig | grep eth | awk '{print $1}'`
-            ssh -t -t ${pl} "ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF}" > /dev/null 2>&1 &
+            ssh -t -t ${pl} ip netns exec ${fee} tcpdump -i ${INTERFACE} -s 0 -w ${RESF} > /dev/null &
             echo "${capture_type} tcpdump is running on ${pl} ${fee} now"
             echo
         done
